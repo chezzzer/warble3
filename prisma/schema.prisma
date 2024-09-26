@@ -10,11 +10,24 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
+model Request {
     id        Int      @id @default(autoincrement())
+    spotifyId String
     name      String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
 
-    @@index([name])
+model SpotifyCredentials {
+    id           Int    @id @default(autoincrement())
+    accessToken  String
+    refreshToken String
+    expiresIn    Int
+    expires      BigInt
+    tokenType    String
+}
+
+model SpotifyPlaybackState {
+    id         Int    @id @default(autoincrement())
+    state_json String
 }
