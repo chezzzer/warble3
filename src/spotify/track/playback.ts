@@ -10,6 +10,7 @@ export default async function trackPlayback() {
         .then(async (context) => {
             if (context === null) {
                 log("🎵 No song playing")
+                await db.spotifyPlaybackState.deleteMany()
                 return
             }
             const track = context.item as Track
@@ -40,6 +41,7 @@ export default async function trackPlayback() {
 }
 
 function log(message: string) {
+    return
     console.clear()
     console.info(message)
 }

@@ -5,7 +5,7 @@ import EventEmitter from "events"
 export default class SpotifyContext {
     public events: EventEmitter = new EventEmitter()
 
-    private state: PlaybackState | null = null
+    private state: PlaybackState | null | undefined = undefined
 
     static make(): SpotifyContext {
         const context = new SpotifyContext()
@@ -14,7 +14,7 @@ export default class SpotifyContext {
 
     constructor() {}
 
-    public getContext(): PlaybackState | null {
+    public getContext() {
         return this.state
     }
 
@@ -44,7 +44,10 @@ export default class SpotifyContext {
             ? JSON.parse(spotifyPlaybackState.state_json)
             : null
 
-        if (this.state?.timestamp !== state?.timestamp) {
+        if (
+            this.state === undefined ||
+            this.state?.timestamp !== state?.timestamp
+        ) {
             this.events.emit("change", state)
         }
 

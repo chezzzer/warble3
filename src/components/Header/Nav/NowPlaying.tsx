@@ -4,39 +4,21 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import { useSpotify } from "@/lib/Context/SpotifyContext"
 import { secondsToTime } from "@/lib/utils"
-import { api } from "@/trpc/react"
-import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
 import Link from "next/link"
-import { useMemo, useState } from "react"
 
 export default function NowPlaying() {
-    const [progress, setProgress] = useState(0)
-    const [track, setTrack] = useState<Track | null>(null)
-    const [paused, setPaused] = useState<boolean>(false)
-
-    api.player.subscribeContext.useSubscription(undefined, {
-        onData: (context) => {
-            setTrack(context?.item as Track | null)
-            setPaused(!context?.is_playing)
-        },
-    })
-
-    api.player.subscribeProgress.useSubscription(undefined, {
-        onData: (progress) => {
-            if (progress === null) return
-            setProgress(progress)
-        },
-    })
+    const { track, paused, progress } = useSpotify()
 
     return (
         <>
-            {!track && (
+            {track === undefined && (
                 <div className="flex aspect-square items-center justify-center">
                     <Spinner size={30} />
                 </div>
             )}
-            {!!track && (
+            {track && (
                 <HoverCard>
                     <HoverCardTrigger asChild>
                         <div className="relative">

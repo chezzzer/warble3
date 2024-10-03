@@ -27,7 +27,7 @@ export default function Navbar() {
     const pathname = usePathname()
 
     return (
-        <div className="relative h-screen w-[80px] min-w-[80px]">
+        <div className="relative z-50 h-screen w-[80px] min-w-[80px]">
             <div className="fixed h-full w-[80px] border-r-[1px] border-slate-800 bg-slate-900">
                 <div className="flex h-full flex-col items-center justify-between gap-10 p-2 pt-5">
                     <div>

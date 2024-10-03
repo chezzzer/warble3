@@ -6,6 +6,9 @@ import { type Metadata } from "next"
 import { TRPCReactProvider } from "@/trpc/react"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import Navbar from "@/components/Header/Nav/Navbar"
+import { SpotifyProvider } from "@/lib/Context/SpotifyContext"
+import Footer from "@/components/Footer/Footer"
+import { QueueProvider } from "@/lib/Context/QueueContext"
 
 export const metadata: Metadata = {
     title: "Create T3 App",
@@ -18,7 +21,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" className={`${GeistSans.variable}`}>
-            <body className="bg-slate-950">
+            <body className="overflow-x-hidden bg-slate-950 antialiased">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"
@@ -26,15 +29,22 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <TRPCReactProvider>
-                        <div className="flex">
-                            <Navbar />
-                            <div
-                                className="relative flex-grow"
-                                style={{ maxWidth: "calc(100vw - 80px)" }}
-                            >
-                                {children}
-                            </div>
-                        </div>
+                        <SpotifyProvider>
+                            <QueueProvider>
+                                <div className="flex">
+                                    <Navbar />
+                                    <main
+                                        className="relative flex-grow"
+                                        style={{
+                                            maxWidth: "calc(100vw - 80px)",
+                                        }}
+                                    >
+                                        {children}
+                                        <Footer />
+                                    </main>
+                                </div>
+                            </QueueProvider>
+                        </SpotifyProvider>
                     </TRPCReactProvider>
                 </ThemeProvider>
             </body>

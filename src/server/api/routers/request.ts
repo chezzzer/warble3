@@ -5,8 +5,12 @@ import { observable } from "@trpc/server/observable"
 import { db } from "@/server/db"
 import { Request } from "@prisma/client"
 import EventEmitter from "events"
+import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
+import { Track } from "@spotify/web-api-ts-sdk"
 
 const ee = new EventEmitter()
+
+export type RequestItem = Request & { track: Track }
 
 export const requestRouter = createTRPCRouter({
     create: publicProcedure
@@ -17,6 +21,12 @@ export const requestRouter = createTRPCRouter({
             })
         )
         .mutation(async ({ input }) => {
+            if (!input.name) {
+                throw new Error("Name is required")
+            }
+
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
             const request = await db.request.create({
                 data: {
                     spotifyId: input.spotifyId,
@@ -24,19 +34,47 @@ export const requestRouter = createTRPCRouter({
                 },
             })
 
-            ee.emit("request", request)
+            const track = await spotify.tracks.get(request.spotifyId)
 
-            return request
+            try {
+                spotify.player.addItemToPlaybackQueue(track.uri)
+            } catch {
+                //fuck off spotify api
+            }
+
+            ee.emit("request", {
+                ...request,
+                track: track,
+            })
+
+            return {
+                ...request,
+                track: track,
+            }
         }),
 
     get: publicProcedure.query(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
         const requests = await db.request.findMany()
-        return requests
+
+        if (requests.length === 0) {
+            return []
+        }
+
+        const tracks = await spotify.tracks.get(
+            requests.map((r) => r.spotifyId)
+        )
+
+        return requests.map((r, i) => ({
+            ...r,
+            track: tracks[i],
+        }))
     }),
 
-    onRequest: publicProcedure.subscription(() => {
-        return observable<Request>((emit) => {
-            const onRequest = (request: Request) => {
+    onRequest: publicProcedure.subscription(async () => {
+        return observable<RequestItem>((emit) => {
+            const onRequest = async (request: RequestItem) => {
                 emit.next(request)
             }
 

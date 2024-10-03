@@ -1,5 +1,6 @@
 import trackPlayback from "./playback"
 import checkForRefresh from "./refreshToken"
+import removeQueue from "./removeQueue"
 
 checkForRefresh().then(() => {
     setInterval(() => {
@@ -7,8 +8,12 @@ checkForRefresh().then(() => {
     }, 10_000)
     setInterval(() => {
         trackPlayback()
-    }, 500)
+    }, 1000)
 
     trackPlayback()
 })
+
+setInterval(() => {
+    removeQueue()
+}, 500)
 

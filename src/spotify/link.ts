@@ -42,6 +42,7 @@ function openAuthURL() {
         "user-read-playback-state",
         "user-read-currently-playing",
         "user-modify-playback-state",
+        "user-read-recently-played",
     ].join(" ")
 
     const authURL =
