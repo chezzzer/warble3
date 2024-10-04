@@ -12,6 +12,7 @@ import { Artist } from "@spotify/web-api-ts-sdk"
 import { unstable_cache } from "next/cache"
 import { readFile, writeFile } from "fs/promises"
 import Link from "next/link"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 async function getHomeArtist() {
     try {
@@ -34,9 +35,10 @@ async function getHomeArtist() {
             getExtraArtistInfo(id),
         ])
 
-        return [artist, artistInfo] as const
+        return [artist, artistInfo] as [Artist, ArtistInfo | null]
     } catch (e) {
-        console.error(e)
+        console.error("Error with fetching home artist", e)
+        return null
     }
 }
 
@@ -56,7 +58,7 @@ export default async function HomeHero() {
             <div
                 className="relative flex h-[300px] flex-col justify-end p-10"
                 style={{
-                    backgroundImage: `linear-gradient(45deg, ${artistInfo.visuals.headerImage.color || "#000000"}, ${artistInfo.visuals.headerImage.color || "#000000"}00), url(${artistInfo.visuals.headerImage.images[0].url || artist.images[0].url})`,
+                    backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage.color || "#000000"}, ${artistInfo?.visuals.headerImage.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -81,7 +83,7 @@ export default async function HomeHero() {
                     </div>
                 </div>
             </div>
-            {artistInfo.visuals.headerImage.color && (
+            {artistInfo?.visuals.headerImage.color && (
                 <div
                     className="pointer-events-none absolute z-0 h-[300px] w-full"
                     style={{

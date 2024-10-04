@@ -5,6 +5,7 @@ import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { formatNumber, limitArray } from "@/lib/utils"
 import { Artist } from "@spotify/web-api-ts-sdk"
 import { Badge } from "../ui/badge"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function ArtistHero({
     artist,
@@ -18,7 +19,7 @@ export default function ArtistHero({
             <div
                 className="relative flex h-[400px] flex-col justify-end p-10"
                 style={{
-                    backgroundImage: `linear-gradient(45deg, ${artistInfo.visuals.headerImage?.color || "#000000"}, ${artistInfo.visuals.headerImage?.color || "#000000"}00), url(${artistInfo.visuals.headerImage?.images[0].url || artist.images[0]?.url})`,
+                    backgroundImage: `linear-gradient(45deg, ${artistInfo.visuals.headerImage?.color || "#000000"}, ${artistInfo.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -27,7 +28,7 @@ export default function ArtistHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
-                                src={artist.images[2]?.url}
+                                src={getLargestImage(artist.images)?.url}
                                 className="aspect-square rounded-full object-cover drop-shadow-2xl"
                                 width={150}
                                 height={150}

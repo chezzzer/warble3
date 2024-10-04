@@ -6,6 +6,7 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { useSpotify } from "@/lib/Context/SpotifyContext"
+import { getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
 import { secondsToTime } from "@/lib/utils"
 import Link from "next/link"
 
@@ -26,7 +27,7 @@ export default function NowPlaying() {
                             <img
                                 width="100%"
                                 className={`animate-spin rounded-full border-[3px] border-white/0 shadow-inset-lg [animation-duration:3s] ${paused && "[animation-play-state:paused]"}`}
-                                src={track.album.images[1]?.url}
+                                src={getSmallestImage(track.album.images)?.url}
                             />
                             <div className="absolute left-0 top-0 h-full w-full">
                                 <svg
@@ -68,7 +69,10 @@ export default function NowPlaying() {
                                     target="_blank"
                                 >
                                     <img
-                                        src={track.album.images[1]?.url}
+                                        src={
+                                            getSmallestImage(track.album.images)
+                                                ?.url
+                                        }
                                         className="rounded-lg"
                                         width={80}
                                         height={80}

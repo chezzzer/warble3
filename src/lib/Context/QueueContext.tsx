@@ -9,36 +9,17 @@ import type { PropsWithChildren } from "react"
 import { useSpotify } from "./SpotifyContext"
 
 function useProviderValue() {
-    const mutation = api.request.create.useMutation({
-        onSuccess: async (item) => {
-            const request = item as unknown as RequestItem
-            setQueue((q) => [...q, request])
-        },
-    })
+    const mutation = api.request.create.useMutation()
     const [queue, setQueue] = useState<RequestItem[]>([])
 
-    const { track } = useSpotify()
-
-    useEffect(() => {
-        refetch()
-    }, [track])
-
-    api.request.onRequest.useSubscription(undefined, {
-        onData: (request) => {
-            const r = request as unknown as RequestItem
-            setQueue((q) => [...q, r])
+    api.request.onChange.useSubscription(undefined, {
+        onData: (requests) => {
+            setQueue(requests as unknown as RequestItem[])
         },
     })
-
-    const { data, refetch } = api.request.get.useQuery()
-
-    useEffect(() => {
-        setQueue(data as unknown as RequestItem[])
-    }, [data])
 
     return {
         queue,
-        refetch,
         mutation,
     }
 }
@@ -60,4 +41,3 @@ export function useQueue() {
     }
     return context
 }
-

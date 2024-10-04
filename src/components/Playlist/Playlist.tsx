@@ -8,6 +8,7 @@ import type {
 } from "@spotify/web-api-ts-sdk"
 import { Card, CardContent, CardHeader } from "../ui/card"
 import Link from "next/link"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function Playlist({
     playlist,
@@ -20,7 +21,7 @@ export default function Playlist({
                 <Card className="cursor-pointer transition-colors hover:bg-slate-900/70">
                     <CardHeader>
                         <img
-                            src={playlist.images[0]?.url}
+                            src={getLargestImage(playlist.images)?.url}
                             className="aspect-square rounded-lg object-cover"
                             alt={playlist.name}
                         />

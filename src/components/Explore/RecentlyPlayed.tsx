@@ -8,13 +8,9 @@ import { useSpotify } from "@/lib/Context/SpotifyContext"
 import { useEffect } from "react"
 
 export default function RecentlyPlayed() {
-    const { isPending, data, refetch } = api.spotify.getHistory.useQuery()
-    const { track } = useSpotify()
-
-    useEffect(() => {
-        console.log("track change")
-        refetch()
-    }, [track])
+    const { isPending, data } = api.spotify.getHistory.useQuery(undefined, {
+        refetchInterval: 60_000,
+    })
 
     if (isPending || !data) {
         return <SpinnerSkeleton />
@@ -29,4 +25,3 @@ export default function RecentlyPlayed() {
         </>
     )
 }
-

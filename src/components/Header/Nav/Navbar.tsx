@@ -5,10 +5,12 @@ import {
     House,
     MagnifyingGlass,
     MicrophoneStage,
+    MusicNote,
 } from "@phosphor-icons/react"
 import Link from "next/link"
 import NowPlaying from "./NowPlaying"
 import { usePathname, useRouter } from "next/navigation"
+import Queue from "./Queue"
 
 export default function Navbar() {
     const items = [
@@ -50,6 +52,7 @@ export default function Navbar() {
                     ))}
                 </div>
                 <div className="w-full">
+                    <Queue />
                     <NowPlaying />
                 </div>
             </div>

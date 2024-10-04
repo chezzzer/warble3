@@ -28,11 +28,8 @@ export default async function ArtistPage({ artistId }: { artistId: string }) {
     ] = await Promise.all([
         spotify.artists.get(artistId),
         getExtraArtistInfo(artistId),
-        spotify.artists.topTracks(artistId, "US"),
-        spotify.artists.albums(
-            artistId,
-            "album, single, appears_on, compilations"
-        ),
+        spotify.artists.topTracks(artistId, "NZ"),
+        spotify.artists.albums(artistId, "album,single,appears_on,compilation"),
         spotify.artists.relatedArtists(artistId),
         spotify.recommendations.get({
             seed_artists: [artistId],

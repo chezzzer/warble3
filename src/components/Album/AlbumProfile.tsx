@@ -4,12 +4,15 @@ import { SimplifiedAlbum, Track } from "@spotify/web-api-ts-sdk"
 import TrackTable from "../Track/TrackTable"
 import AlbumArtist from "./AlbumArtist"
 import AlbumHero from "./AlbumHero"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export async function AlbumProfile({ albumId }: { albumId: string }) {
     const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
     const album = await spotify.albums.get(albumId)
-    const [color] = await getExtractedColors([album.images[0].url])
+    const [color] = await getExtractedColors([
+        getLargestImage(album.images)?.url,
+    ])
 
     const artistAlbums = await spotify.artists.albums(album.artists[0].id)
 

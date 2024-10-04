@@ -1,5 +1,5 @@
 import { ArtistInfoPinnedItem } from "@/lib/Spotify/SpotifyExtraArtistInfo"
-import { extractUri } from "@/lib/Spotify/SpotifyUtils"
+import { extractUri, getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 import Link from "next/link"
 import { Badge } from "../ui/badge"
 
@@ -29,7 +29,7 @@ export default function ArtistPinnedItem({
                     {item.item.images && (
                         <div>
                             <img
-                                src={item.item.images[0].url}
+                                src={getLargestImage(item.item.images).url}
                                 className="aspect-square rounded-lg object-cover"
                                 width={100}
                                 height={100}

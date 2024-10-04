@@ -16,6 +16,9 @@ export const env = createEnv({
         SPOTIFY_CLIENT_ID: z.string(),
         SPOTIFY_CLIENT_SECRET: z.string(),
         SPOTIFY_REDIRECT_URI: z.string(),
+
+        //Lyrics
+        MUSIXMATCH_USERTOKENS: z.string(),
     },
 
     /**
@@ -37,6 +40,7 @@ export const env = createEnv({
         SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
         SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
         SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+        MUSIXMATCH_USERTOKENS: process.env.MUSIXMATCH_USERTOKENS,
         // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     },
     /**
@@ -50,4 +54,3 @@ export const env = createEnv({
      */
     emptyStringAsUndefined: true,
 })
-

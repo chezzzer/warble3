@@ -5,6 +5,7 @@ import { TableCell, TableRow } from "../ui/table"
 import { secondsToTime } from "@/lib/utils"
 import TrackDialog from "./TrackDialog"
 import { useState } from "react"
+import { getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function TrackTableItem({
     track,
@@ -27,7 +28,7 @@ export default function TrackTableItem({
                     <div className="flex items-center gap-5">
                         <div>
                             <img
-                                src={track.album.images[2].url}
+                                src={getSmallestImage(track.album.images).url}
                                 width={50}
                                 height={50}
                                 className="rounded-lg shadow-lg"

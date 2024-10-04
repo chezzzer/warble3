@@ -1,6 +1,7 @@
 "use client"
 
 import { ExtractedColor } from "@/lib/Spotify/GetExtractedColors"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 import { formatNumber } from "@/lib/utils"
 import { Playlist } from "@spotify/web-api-ts-sdk"
 import { decode } from "html-entities"
@@ -24,7 +25,7 @@ export default function PlaylistHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
-                                src={playlist.images[0].url}
+                                src={getLargestImage(playlist.images).url}
                                 className="aspect-square rounded-lg object-cover drop-shadow-2xl"
                                 width={200}
                                 height={200}

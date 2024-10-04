@@ -13,7 +13,7 @@ export default function ArtistList({
                     <Link
                         key={artist.id}
                         href={`/artist/${artist.id}`}
-                        className="underline underline-offset-2"
+                        className="underline"
                     >
                         {artist.name}
                         {i !== artists.length - 1 && ","}

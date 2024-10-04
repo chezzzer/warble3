@@ -8,8 +8,6 @@ import EventEmitter from "events"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { Track } from "@spotify/web-api-ts-sdk"
 
-const ee = new EventEmitter()
-
 export type RequestItem = Request & { track: Track }
 
 export const requestRouter = createTRPCRouter({
@@ -37,15 +35,10 @@ export const requestRouter = createTRPCRouter({
             const track = await spotify.tracks.get(request.spotifyId)
 
             try {
-                spotify.player.addItemToPlaybackQueue(track.uri)
+                await spotify.player.addItemToPlaybackQueue(track.uri)
             } catch {
                 //fuck off spotify api
             }
-
-            ee.emit("request", {
-                ...request,
-                track: track,
-            })
 
             return {
                 ...request,
@@ -72,16 +65,40 @@ export const requestRouter = createTRPCRouter({
         }))
     }),
 
-    onRequest: publicProcedure.subscription(async () => {
-        return observable<RequestItem>((emit) => {
-            const onRequest = async (request: RequestItem) => {
-                emit.next(request)
-            }
+    onChange: publicProcedure.subscription(async () => {
+        let queueIdSum: string | null = null
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+        return observable<RequestItem[]>((emit) => {
+            const interval = setInterval(async () => {
+                const queue = await db.request.findMany()
 
-            ee.on("request", onRequest)
+                if (queueIdSum === queue.map((q) => q.id).join("")) {
+                    return
+                }
+
+                queueIdSum = queue.map((q) => q.id).join("")
+
+                const requests = await db.request.findMany()
+
+                if (requests.length === 0) {
+                    emit.next([])
+                    return
+                }
+
+                const tracks = await spotify.tracks.get(
+                    requests.map((r) => r.spotifyId)
+                )
+
+                emit.next(
+                    requests.map((r, i) => ({
+                        ...r,
+                        track: tracks[i],
+                    }))
+                )
+            }, 1000)
 
             return () => {
-                ee.off("request", onRequest)
+                clearInterval(interval)
             }
         })
     }),

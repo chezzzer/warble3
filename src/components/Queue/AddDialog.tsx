@@ -16,6 +16,8 @@ import { Check, Plus, Warning } from "@phosphor-icons/react"
 import Spinner from "../Misc/Spinner"
 import { numberToOrdinal, sleep } from "@/lib/utils"
 
+import { toast } from "sonner"
+
 export default function AddDialog({
     children,
     track,
@@ -42,6 +44,8 @@ export default function AddDialog({
         }
 
         setOpen(false)
+
+        toast.success("Added to queue!")
 
         if (onAdd) {
             onAdd()

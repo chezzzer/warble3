@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from "../ui/card"
 import { Dialog } from "../ui/dialog"
 import { useState } from "react"
 import TrackDialog from "./TrackDialog"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function Track({ track }: { track: Track }) {
     const [open, setOpen] = useState(false)
@@ -16,7 +17,7 @@ export default function Track({ track }: { track: Track }) {
             >
                 <CardHeader>
                     <img
-                        src={track.album.images[1]?.url}
+                        src={getLargestImage(track.album.images)?.url}
                         className="aspect-square rounded-lg object-cover"
                         alt={track.name}
                     />
@@ -39,4 +40,3 @@ export default function Track({ track }: { track: Track }) {
         </>
     )
 }
-

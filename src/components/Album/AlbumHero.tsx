@@ -6,6 +6,7 @@ import { Circle } from "@phosphor-icons/react"
 import { Album } from "@spotify/web-api-ts-sdk"
 import Link from "next/link"
 import { Badge } from "../ui/badge"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function AlbumHero({
     album,
@@ -26,7 +27,7 @@ export default function AlbumHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
-                                src={album.images[0].url}
+                                src={getLargestImage(album.images)?.url}
                                 className="aspect-square rounded-full object-cover drop-shadow-2xl"
                                 width={150}
                                 height={150}

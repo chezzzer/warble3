@@ -13,6 +13,7 @@ import {
 } from "../ui/dialog"
 import TrackPreview from "./TrackPreview"
 import ArtistList from "../Artist/ArtistList"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function TrackDialog({
     track,
@@ -30,7 +31,7 @@ export default function TrackDialog({
                     <div className="flex items-center gap-8">
                         <Link href={`/album/${track.album.id}`}>
                             <img
-                                src={track.album.images[1]?.url}
+                                src={getLargestImage(track.album.images)?.url}
                                 width={150}
                                 height={150}
                                 className="rounded-lg object-cover"

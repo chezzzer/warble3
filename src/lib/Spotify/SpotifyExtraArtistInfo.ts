@@ -1,9 +1,9 @@
-import { SimplifiedAlbum } from "@spotify/web-api-ts-sdk"
+import { Image, SimplifiedAlbum } from "@spotify/web-api-ts-sdk"
 import { writeFile } from "fs/promises"
 
 export default async function getExtraArtistInfo(
     artistId: string
-): Promise<ArtistInfo | undefined> {
+): Promise<ArtistInfo | null> {
     const sourceRes = await fetch("https://open.spotify.com/artist/" + artistId)
     const source = await sourceRes.text()
     const matches = source.match(
@@ -40,7 +40,7 @@ export default async function getExtraArtistInfo(
     const { data } = await artistRes.json()
 
     if (!data.artistUnion) {
-        return
+        return null
     }
 
     writeFile("artist.json", JSON.stringify(data.artistUnion, null, 2))
@@ -131,12 +131,12 @@ export type ArtistInfo = {
     stats: ArtistInfoStats
     visuals: {
         avatarImage: {
-            images: ArtistInfoImage[]
+            images: Image[]
             extractedColor: string
         }
-        gallery: ArtistInfoImage[]
+        gallery: Image[]
         headerImage?: {
-            images: ArtistInfoImage[]
+            images: Image[]
             color: string
         }
     }
@@ -152,12 +152,6 @@ export type ArtistInfoStats = {
         region: string
     }>
     worldRank: number
-}
-
-export type ArtistInfoImage = {
-    height: number
-    url: string
-    width: number
 }
 
 export type ArtistInfoPinnedItem = {

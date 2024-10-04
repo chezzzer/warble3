@@ -3,6 +3,7 @@
 import type { Artist, SimplifiedAlbum, Track } from "@spotify/web-api-ts-sdk"
 import { Card, CardContent, CardHeader } from "../ui/card"
 import Link from "next/link"
+import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export default function Artist({ artist }: { artist: Artist }) {
     return (
@@ -11,7 +12,7 @@ export default function Artist({ artist }: { artist: Artist }) {
                 <Card className="cursor-pointer transition-colors hover:bg-slate-900/70">
                     <CardHeader>
                         <img
-                            src={artist.images[1]?.url}
+                            src={getLargestImage(artist.images)?.url}
                             className="aspect-square rounded-full object-cover"
                             alt={artist.name}
                         />

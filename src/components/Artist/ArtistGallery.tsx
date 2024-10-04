@@ -1,11 +1,7 @@
-import { ArtistInfoImage } from "@/lib/Spotify/SpotifyExtraArtistInfo"
+import { Image } from "@spotify/web-api-ts-sdk"
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel"
 
-export default function ArtistGallery({
-    images,
-}: {
-    images: ArtistInfoImage[]
-}) {
+export default function ArtistGallery({ images }: { images: Image[] }) {
     return (
         <Carousel
             opts={{ dragFree: true }}
