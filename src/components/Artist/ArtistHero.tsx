@@ -32,6 +32,7 @@ export default function ArtistHero({
                                 className="aspect-square rounded-full object-cover drop-shadow-2xl"
                                 width={150}
                                 height={150}
+                                alt={artist.name}
                             />
                         </div>
                         <div className="flex flex-col gap-3">

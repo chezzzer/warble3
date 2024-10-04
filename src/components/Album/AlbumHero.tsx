@@ -27,6 +27,7 @@ export default function AlbumHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
+                                alt={album.name}
                                 src={getLargestImage(album.images)?.url}
                                 className="aspect-square rounded-full object-cover drop-shadow-2xl"
                                 width={150}

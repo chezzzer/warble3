@@ -26,6 +26,7 @@ export default function CategoryHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
+                                alt={category.name}
                                 src={category.icons[0].url}
                                 className="aspect-square rounded-full object-cover drop-shadow-2xl"
                                 width={150}

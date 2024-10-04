@@ -22,7 +22,7 @@ export async function CategoryProfile({ categoryId }: { categoryId: string }) {
                 <h1 className="mb-3 mt-10 text-2xl opacity-75">Categories</h1>
                 <div className="grid grid-cols-6 gap-5">
                     {playlists.playlists.items.map((playlist) => (
-                        <Playlist playlist={playlist} />
+                        <Playlist key={playlist.id} playlist={playlist} />
                     ))}
                 </div>
             </div>

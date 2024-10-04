@@ -7,12 +7,12 @@ export function extractUri(uri: string): { type: string; id: string } {
 
 export function replaceSpotifyUriLinks(html: string): string {
     const regex =
-        /<a\s+(?:[^>]*?\s+)?href="(spotify:[^"]*)"([^>]*)>(.*?)<\/a>/gi
+        /<a\s+(?:[^>]*?\s+)?href=(["']?)(spotify:[^"'\s>]*)\1([^>]*)>(.*?)<\/a>/gi
 
-    return html.replace(regex, (match, uri, attributes, linkText) => {
+    return html.replace(regex, (match, quote, uri, attributes, linkText) => {
         const { type, id } = extractUri(uri)
         const newHref = `/${type}/${id}`
-        return `<a href="${newHref}"${attributes}>${linkText}</a>`
+        return `<a href=${quote}${newHref}${quote}${attributes}>${linkText}</a>`
     })
 }
 

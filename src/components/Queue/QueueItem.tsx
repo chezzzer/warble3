@@ -18,6 +18,7 @@ export default function QueueItem({
             <div>
                 <Link href={`/album/${request.track.album.id}`}>
                     <img
+                        alt={request.track.name}
                         src={getSmallestImage(request.track.album.images).url}
                         width={75}
                         height={75}

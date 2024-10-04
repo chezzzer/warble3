@@ -15,6 +15,7 @@ export default function ArtistGallery({ images }: { images: Image[] }) {
                         <img
                             src={image.url}
                             className="h-full rounded-lg object-cover"
+                            alt="Artist Image"
                         />
                     </CarouselItem>
                 ))}

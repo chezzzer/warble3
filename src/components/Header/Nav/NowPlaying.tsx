@@ -25,6 +25,7 @@ export default function NowPlaying() {
                     <HoverCardTrigger asChild>
                         <div className="relative">
                             <img
+                                alt={track.name}
                                 width="100%"
                                 className={`animate-spin rounded-full border-[3px] border-white/0 shadow-inset-lg [animation-duration:3s] ${paused && "[animation-play-state:paused]"}`}
                                 src={getSmallestImage(track.album.images)?.url}
@@ -80,6 +81,7 @@ export default function NowPlaying() {
                                     />
                                     <div className="mt-1">
                                         <img
+                                            alt={track.name}
                                             src={`https://scannables.scdn.co/uri/plain/svg/0f162a/white/640/${track.uri}`}
                                         />
                                     </div>

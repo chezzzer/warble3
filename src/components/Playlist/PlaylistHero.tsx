@@ -1,7 +1,10 @@
 "use client"
 
 import { ExtractedColor } from "@/lib/Spotify/GetExtractedColors"
-import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
+import {
+    getLargestImage,
+    replaceSpotifyUriLinks,
+} from "@/lib/Spotify/SpotifyUtils"
 import { formatNumber } from "@/lib/utils"
 import { Playlist } from "@spotify/web-api-ts-sdk"
 import { decode } from "html-entities"
@@ -25,6 +28,7 @@ export default function PlaylistHero({
                     <div className="flex items-end gap-10">
                         <div>
                             <img
+                                alt={playlist.name}
                                 src={getLargestImage(playlist.images).url}
                                 className="aspect-square rounded-lg object-cover drop-shadow-2xl"
                                 width={200}
@@ -35,9 +39,14 @@ export default function PlaylistHero({
                             <h1 className="text-7xl font-bold drop-shadow-lg">
                                 {playlist.name}
                             </h1>
-                            <div className="text-sm opacity-75">
-                                {decode(playlist.description)}
-                            </div>
+                            <div
+                                className="text-sm text-gray-300 [&>a]:text-white [&>a]:underline"
+                                dangerouslySetInnerHTML={{
+                                    __html: replaceSpotifyUriLinks(
+                                        playlist.description
+                                    ),
+                                }}
+                            />
                             <div className="flex gap-3">
                                 <div className="flex items-center gap-2">
                                     <div className="opacity-75">

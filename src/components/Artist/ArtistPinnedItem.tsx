@@ -29,6 +29,7 @@ export default function ArtistPinnedItem({
                     {item.item.images && (
                         <div>
                             <img
+                                alt={item.item.name}
                                 src={getLargestImage(item.item.images).url}
                                 className="aspect-square rounded-lg object-cover"
                                 width={100}

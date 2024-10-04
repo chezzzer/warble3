@@ -69,15 +69,7 @@ export const requestRouter = createTRPCRouter({
         let queueIdSum: string | null = null
         const spotify = await SpotifyProvider.makeFromDatabaseCache()
         return observable<RequestItem[]>((emit) => {
-            const interval = setInterval(async () => {
-                const queue = await db.request.findMany()
-
-                if (queueIdSum === queue.map((q) => q.id).join("")) {
-                    return
-                }
-
-                queueIdSum = queue.map((q) => q.id).join("")
-
+            const sendRequests = async () => {
                 const requests = await db.request.findMany()
 
                 if (requests.length === 0) {
@@ -95,6 +87,22 @@ export const requestRouter = createTRPCRouter({
                         track: tracks[i],
                     }))
                 )
+            }
+
+            const check = async () => {
+                const queue = await db.request.findMany()
+
+                if (queueIdSum === queue.map((q) => q.id).join("")) {
+                    return
+                }
+
+                queueIdSum = queue.map((q) => q.id).join("")
+
+                await sendRequests()
+            }
+
+            const interval = setInterval(() => {
+                check()
             }, 1000)
 
             return () => {

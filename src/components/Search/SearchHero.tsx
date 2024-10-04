@@ -9,19 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 export default function SearchHero() {
     const { setSearch, search } = useSearch()
 
-    const router = useRouter()
-    const params = useSearchParams()
-
-    useEffect(() => {
-        router.replace(`/search/?query=${search}`)
-    }, [search])
-
-    useEffect(() => {
-        if (params.has("query")) {
-            setSearch(params.get("query") as string)
-        }
-    }, [])
-
     const color = useMemo(() => generateRandomBackground(), [])
 
     return (

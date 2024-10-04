@@ -1,5 +1,4 @@
 import { Image, SimplifiedAlbum } from "@spotify/web-api-ts-sdk"
-import { writeFile } from "fs/promises"
 
 export default async function getExtraArtistInfo(
     artistId: string
@@ -42,8 +41,6 @@ export default async function getExtraArtistInfo(
     if (!data.artistUnion) {
         return null
     }
-
-    writeFile("artist.json", JSON.stringify(data.artistUnion, null, 2))
 
     return {
         discography: {

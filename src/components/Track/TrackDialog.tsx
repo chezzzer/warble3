@@ -31,6 +31,7 @@ export default function TrackDialog({
                     <div className="flex items-center gap-8">
                         <Link href={`/album/${track.album.id}`}>
                             <img
+                                alt={track.name}
                                 src={getLargestImage(track.album.images)?.url}
                                 width={150}
                                 height={150}
@@ -60,6 +61,7 @@ export default function TrackDialog({
                                 </DialogTrigger>
                                 <DialogContent>
                                     <img
+                                        alt={track.name}
                                         src={`https://scannables.scdn.co/uri/plain/svg/020817/white/640/${track.uri}`}
                                     />
                                 </DialogContent>

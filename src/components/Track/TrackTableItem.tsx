@@ -28,6 +28,7 @@ export default function TrackTableItem({
                     <div className="flex items-center gap-5">
                         <div>
                             <img
+                                alt={track.name}
                                 src={getSmallestImage(track.album.images).url}
                                 width={50}
                                 height={50}
@@ -38,9 +39,12 @@ export default function TrackTableItem({
                             <p className="text-md font-semibold">
                                 {track.name}
                             </p>
-                            <p className="text-sm opacity-75">
+                            <div className="text-sm opacity-75">
+                                <span className="inline-block rounded bg-gray-800 px-2 font-bold">
+                                    E
+                                </span>
                                 {track.artists.map((a) => a.name).join(", ")}
-                            </p>
+                            </div>
                         </div>
                     </div>
                 </TableCell>
