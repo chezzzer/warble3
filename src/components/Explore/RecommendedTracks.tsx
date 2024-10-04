@@ -11,16 +11,9 @@ import {
 import { readFile, writeFile } from "fs/promises"
 import TrackCarousel from "../Track/TrackCarousel"
 
-async function cuntbag() {
-    const file = await readFile("cuntbag.txt", "utf8")
-    const number = parseInt(file)
-    await writeFile("cuntbag.txt", (number + 1).toString())
-}
-
 async function getRecommendations() {
     const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-    cuntbag()
     return await spotify.recommendations.get({
         seed_genres: ["pop", "rock-n-roll", "britpop"],
         seed_artists: ["3yY2gUcIsjMr8hjo51PoJ8"],
@@ -46,4 +39,3 @@ export default async function RecommendedTracks() {
         </>
     )
 }
-

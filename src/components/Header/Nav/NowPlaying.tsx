@@ -1,3 +1,4 @@
+import ArtistList from "@/components/Artist/ArtistList"
 import Spinner from "@/components/Misc/Spinner"
 import {
     HoverCard,
@@ -63,7 +64,7 @@ export default function NowPlaying() {
                         <div className="flex items-center gap-5">
                             <div className="w-[80px]">
                                 <Link
-                                    href={track.external_urls.spotify}
+                                    href={"/album/" + track.album.id}
                                     target="_blank"
                                 >
                                     <img
@@ -88,9 +89,7 @@ export default function NowPlaying() {
                                     {track.name}
                                 </p>
                                 <p className="text-sm leading-[16px]">
-                                    {track.artists
-                                        .map((a) => a.name)
-                                        .join(", ")}
+                                    <ArtistList artists={track.artists} />
                                 </p>
                                 <p className="mt-1 text-xs">
                                     {secondsToTime(progress / 1000)} /{" "}
@@ -104,4 +103,3 @@ export default function NowPlaying() {
         </>
     )
 }
-

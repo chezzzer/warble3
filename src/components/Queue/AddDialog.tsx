@@ -77,7 +77,7 @@ export default function AddDialog({
                         </div>
                     )}
                 </DialogDescription>
-                <div className="mb-3">
+                <div>
                     <h6 className="mb-1">Your Name</h6>
                     <Input
                         placeholder="John Doe"
@@ -107,4 +107,3 @@ export default function AddDialog({
         </Dialog>
     )
 }
-

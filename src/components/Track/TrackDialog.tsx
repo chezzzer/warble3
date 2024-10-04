@@ -1,27 +1,18 @@
+import { Plus } from "@phosphor-icons/react"
 import { Track } from "@spotify/web-api-ts-sdk"
+import { Smartphone } from "lucide-react"
+import Link from "next/link"
+import AddDialog from "../Queue/AddDialog"
+import { Button } from "../ui/button"
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "../ui/dialog"
-import WavesurferPlayer from "@wavesurfer/react"
-import { useEffect, useRef, useState } from "react"
-import {
-    Camera,
-    Disc,
-    PauseCircle,
-    Play,
-    PlayCircle,
-    Plus,
-} from "@phosphor-icons/react"
-import WaveSurfer from "wavesurfer.js"
 import TrackPreview from "./TrackPreview"
-import { DiscAlbum, Smartphone } from "lucide-react"
-import { Button } from "../ui/button"
-import AddDialog from "../Queue/AddDialog"
+import ArtistList from "../Artist/ArtistList"
 
 export default function TrackDialog({
     track,
@@ -37,23 +28,27 @@ export default function TrackDialog({
             <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-8">
-                        <img
-                            src={track.album.images[1]?.url}
-                            width={150}
-                            height={150}
-                            className="rounded-lg object-cover"
-                        />
+                        <Link href={`/album/${track.album.id}`}>
+                            <img
+                                src={track.album.images[1]?.url}
+                                width={150}
+                                height={150}
+                                className="rounded-lg object-cover"
+                            />
+                        </Link>
                         <div className="flex-1">
-                            <DialogTitle className="text-2xl font-semibold">
-                                {track.name}
-                            </DialogTitle>
+                            <Link href={`/album/${track.album.id}`}>
+                                <DialogTitle className="text-2xl font-semibold">
+                                    {track.name}
+                                </DialogTitle>
+                            </Link>
                             <div className="text-gray-400">
                                 {track.explicit && (
                                     <span className="inline-block rounded bg-gray-800 px-2 font-bold">
                                         E
                                     </span>
                                 )}{" "}
-                                {track.artists.map((a) => a.name).join(", ")}
+                                <ArtistList artists={track.artists} />
                             </div>
                             <Dialog>
                                 <DialogTrigger>
@@ -83,4 +78,3 @@ export default function TrackDialog({
         </Dialog>
     )
 }
-

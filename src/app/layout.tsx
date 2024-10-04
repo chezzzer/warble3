@@ -31,18 +31,11 @@ export default function RootLayout({
                     <TRPCReactProvider>
                         <SpotifyProvider>
                             <QueueProvider>
-                                <div className="flex">
-                                    <Navbar />
-                                    <main
-                                        className="relative flex-grow"
-                                        style={{
-                                            maxWidth: "calc(100vw - 80px)",
-                                        }}
-                                    >
-                                        {children}
-                                        <Footer />
-                                    </main>
-                                </div>
+                                <Navbar />
+                                <main className="relative pl-[80px]">
+                                    {children}
+                                    <Footer />
+                                </main>
                             </QueueProvider>
                         </SpotifyProvider>
                     </TRPCReactProvider>
@@ -51,4 +44,3 @@ export default function RootLayout({
         </html>
     )
 }
-

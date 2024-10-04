@@ -17,7 +17,7 @@ export const requestRouter = createTRPCRouter({
         .input(
             z.object({
                 spotifyId: z.string(),
-                name: z.string(),
+                name: z.string().nullable(),
             })
         )
         .mutation(async ({ input }) => {
@@ -86,4 +86,3 @@ export const requestRouter = createTRPCRouter({
         })
     }),
 })
-

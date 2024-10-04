@@ -25,5 +25,24 @@ export const spotifyRouter = createTRPCRouter({
 
             return history.items.map((i) => i.track)
         }),
-})
 
+    search: publicProcedure
+        .input(z.object({ query: z.string() }))
+        .query(async ({ input }) => {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+            const search = await spotify.search(input.query, [
+                "album",
+                "artist",
+                "track",
+                "playlist",
+            ])
+
+            return {
+                albums: search.albums.items,
+                artists: search.artists.items,
+                tracks: search.tracks.items,
+                playlists: search.playlists.items,
+            }
+        }),
+})

@@ -1,4 +1,9 @@
-export default async function getExtraArtistInfo(artistId: string) {
+import { SimplifiedAlbum } from "@spotify/web-api-ts-sdk"
+import { writeFile } from "fs/promises"
+
+export default async function getExtraArtistInfo(
+    artistId: string
+): Promise<ArtistInfo | undefined> {
     const sourceRes = await fetch("https://open.spotify.com/artist/" + artistId)
     const source = await sourceRes.text()
     const matches = source.match(
@@ -35,69 +40,138 @@ export default async function getExtraArtistInfo(artistId: string) {
     const { data } = await artistRes.json()
 
     if (!data.artistUnion) {
-        return getExtraArtistInfo(artistId)
+        return
     }
 
+    writeFile("artist.json", JSON.stringify(data.artistUnion, null, 2))
+
     return {
+        discography: {
+            popularReleases:
+                data.artistUnion.discography.popularReleasesAlbums.items.map(
+                    (item) =>
+                        ({
+                            album_type: item.type.toLowerCase(),
+                            name: item.name,
+                            release_date: `${item.date.year}-${item.date.month}-${item.date.day}`,
+                            images: item.coverArt.sources.sort((a, b) => {
+                                return a.width - b.width
+                            }),
+                            id: item.id,
+                            uri: item.uri,
+                            label: item.label,
+                            total_tracks: item.tracks.totalCount,
+                            external_urls: {
+                                spotify: item.sharingInfo.shareUrl,
+                            },
+                            copyrights: item.copyright.items,
+                            release_date_precision: "year",
+                            type: "album",
+                        }) as SimplifiedAlbum
+                ),
+        },
+        profile: {
+            biography: data.artistUnion.profile.biography.text,
+            name: data.artistUnion.profile.name,
+            pinnedItem: data.artistUnion.profile.pinnedItem && {
+                comment: data.artistUnion.profile.pinnedItem.comment,
+                backgroundImage:
+                    data.artistUnion.profile.pinnedItem.backgroundImageV2 &&
+                    data.artistUnion.profile.pinnedItem.backgroundImageV2.data
+                        .sources[0].url,
+                item: {
+                    name: data.artistUnion.profile.pinnedItem.itemV2.data.name,
+                    uri: data.artistUnion.profile.pinnedItem.itemV2.data.uri,
+                    type: data.artistUnion.profile.pinnedItem.itemV2.data
+                        .__typename,
+                    images:
+                        data.artistUnion.profile.pinnedItem.itemV2.data.coverArt
+                            ?.sources ||
+                        data.artistUnion.profile.pinnedItem.itemV2.data.images
+                            ?.sources ||
+                        data.artistUnion.profile.pinnedItem.itemV2.data
+                            .albumOfTrack?.coverArt.sources ||
+                        data.artistUnion.profile.pinnedItem.itemV2.data.images
+                            ?.items[0].sources,
+                },
+                type: data.artistUnion.profile.pinnedItem.type,
+            },
+        },
         stats: data.artistUnion.stats,
-        visuals: data.artistUnion.visuals,
+        visuals: {
+            avatarImage: {
+                images: data.artistUnion.visuals.avatarImage?.sources,
+                extractedColor:
+                    data.artistUnion.visuals.avatarImage?.extractedColors
+                        .colorRaw.hex,
+            },
+            gallery: data.artistUnion.visuals.gallery.items.map((item) => ({
+                height: item.sources[0].height,
+                url: item.sources[0].url,
+                width: item.sources[0].width,
+            })),
+            headerImage: data.artistUnion.visuals.headerImage && {
+                images: data.artistUnion.visuals.headerImage.sources,
+                color: data.artistUnion.visuals.headerImage.extractedColors
+                    .colorRaw.hex,
+            },
+        },
     } as ArtistInfo
 }
 
 export type ArtistInfo = {
-    stats:
-        | {
-              followers: number
-              monthlyListeners: number
-              topCities: {
-                  items: Array<{
-                      city: string
-                      country: string
-                      numberOfListeners: number
-                      region: string
-                  }>
-              }
-              worldRank: number
-          }
-        | undefined
-    visuals:
-        | {
-              avatarImage: {
-                  extractedColors: {
-                      colorRaw: {
-                          hex: string
-                      }
-                  }
-                  sources: Array<{
-                      height: number
-                      url: string
-                      width: number
-                  }>
-              }
-              gallery: {
-                  items: Array<{
-                      sources: Array<{
-                          height: number
-                          url: string
-                          width: number
-                      }>
-                  }>
-              }
-              headerImage:
-                  | {
-                        extractedColors: {
-                            colorRaw: {
-                                hex: string
-                            }
-                        }
-                        sources: Array<{
-                            height: number
-                            url: string
-                            width: number
-                        }>
-                    }
-                  | undefined
-          }
-        | undefined
+    discography: {
+        popularReleases: SimplifiedAlbum[]
+    }
+    profile: {
+        biography: string
+        name: string
+        pinnedItem?: ArtistInfoPinnedItem
+    }
+    stats: ArtistInfoStats
+    visuals: {
+        avatarImage: {
+            images: ArtistInfoImage[]
+            extractedColor: string
+        }
+        gallery: ArtistInfoImage[]
+        headerImage?: {
+            images: ArtistInfoImage[]
+            color: string
+        }
+    }
 }
 
+export type ArtistInfoStats = {
+    followers: number
+    monthlyListeners: number
+    topCities: Array<{
+        city: string
+        country: string
+        numberOfListeners: number
+        region: string
+    }>
+    worldRank: number
+}
+
+export type ArtistInfoImage = {
+    height: number
+    url: string
+    width: number
+}
+
+export type ArtistInfoPinnedItem = {
+    comment: string
+    backgroundImage?: string
+    item: {
+        name: string
+        uri: string
+        type: string
+        images?: Array<{
+            url: string
+            width: number
+            height: number
+        }>
+    }
+    type: string
+}

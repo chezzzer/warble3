@@ -11,18 +11,12 @@ import getExtraArtistInfo, {
 import { Artist } from "@spotify/web-api-ts-sdk"
 import { unstable_cache } from "next/cache"
 import { readFile, writeFile } from "fs/promises"
-
-async function cuntbag() {
-    const file = await readFile("cuntbag.txt", "utf8")
-    const number = parseInt(file)
-    await writeFile("cuntbag.txt", (number + 1).toString())
-}
+import Link from "next/link"
 
 async function getHomeArtist() {
     try {
         const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        cuntbag()
         const homeTracks = await spotify.recommendations.get({
             seed_genres: ["pop", "rock-n-roll", "britpop"],
             seed_artists: ["3yY2gUcIsjMr8hjo51PoJ8"],
@@ -40,10 +34,7 @@ async function getHomeArtist() {
             getExtraArtistInfo(id),
         ])
 
-        return {
-            ...artist,
-            ...artistInfo,
-        } as Artist & ArtistInfo
+        return [artist, artistInfo] as const
     } catch (e) {
         console.error(e)
     }
@@ -58,18 +49,14 @@ const getHomeArtistCache = unstable_cache(
 )
 
 export default async function HomeHero() {
-    const artist = await getHomeArtistCache()
-
-    if (!artist) {
-        return null
-    }
+    const [artist, artistInfo] = await getHomeArtistCache()
 
     return (
         <>
             <div
                 className="relative flex h-[300px] flex-col justify-end p-10"
                 style={{
-                    backgroundImage: `linear-gradient(45deg, ${artist.visuals?.headerImage?.extractedColors.colorRaw.hex || "#000000"}, ${artist.visuals?.headerImage?.extractedColors.colorRaw.hex || "#000000"}00), url(${artist.visuals?.headerImage?.sources[0]?.url || artist.images[0]?.url})`,
+                    backgroundImage: `linear-gradient(45deg, ${artistInfo.visuals.headerImage.color || "#000000"}, ${artistInfo.visuals.headerImage.color || "#000000"}00), url(${artistInfo.visuals.headerImage.images[0].url || artist.images[0].url})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -86,21 +73,22 @@ export default async function HomeHero() {
                         </div>
                     </div>
                     <div>
-                        <Button className="flex items-center gap-3 rounded-full">
-                            Explore Tracks <ArrowRight size={22} />
-                        </Button>
+                        <Link href={`/artist/${artist.id}`}>
+                            <Button className="flex items-center gap-3 rounded-full">
+                                Explore Tracks <ArrowRight size={22} />
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
-            {artist.visuals?.headerImage?.extractedColors.colorRaw.hex && (
+            {artistInfo.visuals.headerImage.color && (
                 <div
                     className="pointer-events-none absolute z-0 h-[300px] w-full"
                     style={{
-                        backgroundImage: `linear-gradient(to bottom, ${artist.visuals.headerImage.extractedColors.colorRaw.hex}75, transparent)`,
+                        backgroundImage: `linear-gradient(to bottom, ${artistInfo.visuals.headerImage.color}75, transparent)`,
                     }}
                 ></div>
             )}
         </>
     )
 }
-

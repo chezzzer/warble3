@@ -1,8 +1,28 @@
-"use client"
-import { useQueue } from "@/lib/Context/QueueContext"
+import SearchHero from "@/components/Search/SearchHero"
+import { unstable_cache } from "next/cache"
+import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
+import SearchCategories from "@/components/Search/SearchCategories"
+import SearchResults from "@/components/Search/SearchResults"
 
-export default function Search() {
-    const { queue } = useQueue()
-    return <>{queue?.map((q) => <div>{q.track.name}</div>)}</>
+const getCategoriesCache = unstable_cache(
+    async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        const categories = await spotify.browse.getCategories()
+
+        return categories.categories.items
+    },
+    ["searchCategories"],
+    { tags: ["searchCategories"] }
+)
+
+export default async function Search() {
+    const categories = await getCategoriesCache()
+
+    return (
+        <>
+            <SearchHero />
+            <SearchResults categories={categories} />
+        </>
+    )
 }
-
