@@ -10,7 +10,6 @@ export default async function trackPlayback() {
         .getPlaybackState()
         .then(async (context) => {
             if (context === null) {
-                warbleLog("🎵 No song playing")
                 await db.spotifyPlaybackState.deleteMany()
                 return
             }
