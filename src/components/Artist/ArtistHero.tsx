@@ -17,7 +17,7 @@ export default function ArtistHero({
     return (
         <>
             <div
-                className="relative flex h-[400px] flex-col justify-end p-10"
+                className="dark relative flex h-[400px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${artistInfo.visuals.headerImage?.color || "#000000"}, ${artistInfo.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
                     backgroundSize: "cover",

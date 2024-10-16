@@ -27,7 +27,7 @@ export default function SearchHero() {
     return (
         <>
             <div
-                className={`relative flex h-[500px] flex-col justify-end gap-5 p-10 ${color}`}
+                className={`dark relative flex h-[500px] flex-col justify-end gap-5 p-10 text-white ${color}`}
             >
                 <h1 className="text-8xl font-bold drop-shadow-lg">Search</h1>
                 <div className="w-[500px]">

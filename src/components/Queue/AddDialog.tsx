@@ -81,32 +81,42 @@ export default function AddDialog({
                         </div>
                     )}
                 </DialogDescription>
-                <div>
-                    <h6 className="mb-1">Your Name</h6>
-                    <Input
-                        placeholder="John Doe"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                </div>
-                {mutation.isError && (
-                    <div className="text-red-500">{mutation.error.message}</div>
-                )}
-                <div>
-                    <Button
-                        className="flex w-full items-center gap-2"
-                        onClick={addToQueue}
-                        disabled={mutation.isPending}
-                    >
-                        {mutation.isPending ? (
-                            <Spinner />
-                        ) : (
-                            <>
-                                <Plus size={18} /> Add to Queue
-                            </>
-                        )}
-                    </Button>
-                </div>
+                <form
+                    className="flex flex-col gap-3"
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        addToQueue()
+                    }}
+                >
+                    <div>
+                        <h6 className="mb-1">Your Name</h6>
+                        <Input
+                            placeholder="John Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    {mutation.isError && (
+                        <div className="text-red-500">
+                            {mutation.error.message}
+                        </div>
+                    )}
+                    <div>
+                        <Button
+                            className="flex w-full items-center gap-2"
+                            type="submit"
+                            disabled={mutation.isPending}
+                        >
+                            {mutation.isPending ? (
+                                <Spinner />
+                            ) : (
+                                <>
+                                    <Plus size={18} /> Add to Queue
+                                </>
+                            )}
+                        </Button>
+                    </div>
+                </form>
             </DialogContent>
         </Dialog>
     )

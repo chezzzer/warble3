@@ -13,7 +13,7 @@ export const revalidate = 10
 
 export default async function Home() {
     return (
-        <HydrateClient>
+        <>
             <Suspense fallback={<HomeHeroLoader />}>
                 <HomeHero />
             </Suspense>
@@ -33,6 +33,6 @@ export default async function Home() {
                 <FeaturedPlaylist id="37i9dQZF1DX4Cwn7U4GsKm" />
             </Suspense>
             <RecentlyPlayed />
-        </HydrateClient>
+        </>
     )
 }

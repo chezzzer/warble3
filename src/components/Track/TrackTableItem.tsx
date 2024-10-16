@@ -6,6 +6,7 @@ import { secondsToTime } from "@/lib/utils"
 import TrackDialog from "./TrackDialog"
 import { useState } from "react"
 import { getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
+import TrackExplicit from "./TrackExplicit"
 
 export default function TrackTableItem({
     track,
@@ -40,9 +41,7 @@ export default function TrackTableItem({
                                 {track.name}
                             </p>
                             <div className="text-sm opacity-75">
-                                <span className="inline-block rounded bg-gray-800 px-2 font-bold">
-                                    E
-                                </span>
+                                {track.explicit && <TrackExplicit />}
                                 {track.artists.map((a) => a.name).join(", ")}
                             </div>
                         </div>

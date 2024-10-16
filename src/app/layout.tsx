@@ -21,13 +21,16 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`${GeistSans.variable}`}>
-            <body className="overflow-x-hidden bg-slate-950 antialiased">
+        <html
+            lang="en"
+            className={`${GeistSans.variable}`}
+            suppressHydrationWarning
+        >
+            <body className="overflow-x-hidden bg-slate-200 antialiased transition-colors duration-300 dark:bg-slate-950">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
+                    storageKey="theme"
                 >
                     <TRPCReactProvider>
                         <SpotifyProvider>
@@ -40,8 +43,8 @@ export default function RootLayout({
                             </QueueProvider>
                         </SpotifyProvider>
                     </TRPCReactProvider>
+                    <Toaster />
                 </ThemeProvider>
-                <Toaster />
             </body>
         </html>
     )

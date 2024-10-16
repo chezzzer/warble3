@@ -6,6 +6,7 @@ import { Dialog } from "../ui/dialog"
 import { useState } from "react"
 import TrackDialog from "./TrackDialog"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
+import TrackExplicit from "./TrackExplicit"
 
 export default function Track({ track }: { track: Track }) {
     const [open, setOpen] = useState(false)
@@ -13,7 +14,7 @@ export default function Track({ track }: { track: Track }) {
         <>
             <Card
                 onClick={() => setOpen(true)}
-                className="cursor-pointer transition-colors hover:bg-slate-900/70"
+                className="cursor-pointer transition-colors dark:hover:bg-slate-900/70"
             >
                 <CardHeader>
                     <img
@@ -27,11 +28,7 @@ export default function Track({ track }: { track: Track }) {
                         {track.name}
                     </p>
                     <p className="overflow-hidden whitespace-nowrap text-sm text-gray-400">
-                        {track.explicit && (
-                            <span className="inline-block rounded bg-gray-800 px-2 font-bold">
-                                E
-                            </span>
-                        )}{" "}
+                        {track.explicit && <TrackExplicit />}{" "}
                         {track.artists.map((a) => a.name).join(", ")}
                     </p>
                 </CardContent>

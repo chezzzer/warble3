@@ -65,10 +65,7 @@ export default function NowPlaying() {
                     <HoverCardContent side="right" className="w-80">
                         <div className="flex items-center gap-5">
                             <div className="w-[80px]">
-                                <Link
-                                    href={"/album/" + track.album.id}
-                                    target="_blank"
-                                >
+                                <Link href={"/album/" + track.album.id}>
                                     <img
                                         src={
                                             getSmallestImage(track.album.images)
@@ -82,7 +79,7 @@ export default function NowPlaying() {
                                     <div className="mt-1">
                                         <img
                                             alt={track.name}
-                                            src={`https://scannables.scdn.co/uri/plain/svg/0f162a/white/640/${track.uri}`}
+                                            src={`https://scannables.scdn.co/uri/plain/svg/020817/white/640/${track.uri}`}
                                         />
                                     </div>
                                 </Link>

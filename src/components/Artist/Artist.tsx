@@ -9,7 +9,7 @@ export default function Artist({ artist }: { artist: Artist }) {
     return (
         <>
             <Link href={`/artist/${artist.id}`}>
-                <Card className="cursor-pointer transition-colors hover:bg-slate-900/70">
+                <Card className="cursor-pointer transition-colors dark:hover:bg-slate-900/70">
                     <CardHeader>
                         <img
                             src={getLargestImage(artist.images)?.url}

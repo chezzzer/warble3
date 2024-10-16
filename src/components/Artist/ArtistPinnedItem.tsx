@@ -17,7 +17,7 @@ export default function ArtistPinnedItem({
     return (
         <Link href={`/${type}/${id}`}>
             <div
-                className="flex h-[250px] w-full flex-col justify-between rounded-lg p-5"
+                className="dark flex h-[250px] w-full flex-col justify-between rounded-lg p-5 text-white"
                 style={{
                     background: `linear-gradient(to bottom, rgba(0, 0, 0, .2), rgba(0, 0, 0, .8)), url("${item.backgroundImage}")`,
                     backgroundSize: "cover",

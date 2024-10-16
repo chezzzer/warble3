@@ -12,7 +12,13 @@ import { useEffect, useRef, useState } from "react"
 import { PauseCircle, Play, PlayCircle } from "@phosphor-icons/react"
 import WaveSurfer from "wavesurfer.js"
 
-export default function TrackPreview({ track }: { track: Track }) {
+export default function TrackPreview({
+    track,
+    color,
+}: {
+    track: Track
+    color?: string
+}) {
     const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -40,7 +46,7 @@ export default function TrackPreview({ track }: { track: Track }) {
             >
                 <WavesurferPlayer
                     waveColor="#334155"
-                    progressColor="#3b82f6"
+                    progressColor={color ?? "#3b82f6"}
                     cursorColor="rgb(255, 255, 255)"
                     barGap={2}
                     normalize={true}
@@ -55,4 +61,3 @@ export default function TrackPreview({ track }: { track: Track }) {
         </div>
     )
 }
-

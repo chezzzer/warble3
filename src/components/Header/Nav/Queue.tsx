@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover"
 import { useQueue } from "@/lib/Context/QueueContext"
 import { useSpotify } from "@/lib/Context/SpotifyContext"
-import { Queue as QueueIcon } from "@phosphor-icons/react"
+import { MaskSad, Queue as QueueIcon } from "@phosphor-icons/react"
 
 export default function Queue() {
     const { queue } = useQueue()
@@ -46,8 +46,13 @@ export default function Queue() {
                         )
                     })}
                     {queue?.length === 0 && (
-                        <div className="text-center text-gray-400">
-                            No Songs in Queue
+                        <div className="flex flex-col items-center gap-3">
+                            <div>
+                                <MaskSad size={40} />
+                            </div>
+                            <div className="text-center text-gray-400">
+                                No Songs in Queue
+                            </div>
                         </div>
                     )}
                 </div>

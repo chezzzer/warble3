@@ -18,7 +18,7 @@ export default function AlbumHero({
     return (
         <>
             <div
-                className="relative flex h-[300px] flex-col justify-end p-10"
+                className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${color.colorDark}, ${color.colorLight})`,
                 }}

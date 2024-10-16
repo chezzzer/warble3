@@ -9,7 +9,7 @@ export default function Album({ album }: { album: SimplifiedAlbum }) {
     return (
         <>
             <Link href={`/album/${album.id}`}>
-                <Card className="cursor-pointer transition-colors hover:bg-slate-900/70">
+                <Card className="cursor-pointer transition-colors dark:hover:bg-slate-900/70">
                     <CardHeader>
                         <img
                             src={getLargestImage(album.images)?.url}

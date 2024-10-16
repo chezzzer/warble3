@@ -1,19 +1,9 @@
+import { getAccessToken } from "./SpotifyPublicAuthentication"
+
 export default async function getExtractedColors(
     uris: string[]
 ): Promise<ExtractedColor[] | undefined> {
-    const sourceRes = await fetch("https://open.spotify.com/", {
-        next: {
-            revalidate: 60,
-        },
-    })
-    const source = await sourceRes.text()
-    const matches = source.match(
-        /<script id="session" data-testid="session" type="application\/json">(.*?)<\/script>/s
-    )
-    if (!matches || !matches[1]) {
-        return null
-    }
-    const { accessToken } = JSON.parse(matches[1])
+    const accessToken = await getAccessToken()
 
     const albumRes = await fetch(
         "https://api-partner.spotify.com/pathfinder/v1/query?" +
