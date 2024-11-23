@@ -2,6 +2,8 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc"
 import { requestRouter } from "./routers/request"
 import { playerRouter } from "./routers/player"
 import { spotifyRouter } from "./routers/spotify"
+import { lyricsRouter } from "./routers/lyrics"
+import { adminRouter } from "./routers/admin"
 
 /**
  * This is the primary router for your server.
@@ -12,6 +14,8 @@ export const appRouter = createTRPCRouter({
     request: requestRouter,
     player: playerRouter,
     spotify: spotifyRouter,
+    lyrics: lyricsRouter,
+    admin: adminRouter,
 })
 
 // export type definition of API
@@ -25,4 +29,3 @@ export type AppRouter = typeof appRouter
  *       ^? Post[]
  */
 export const createCaller = createCallerFactory(appRouter)
-

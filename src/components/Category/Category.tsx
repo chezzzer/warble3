@@ -12,7 +12,7 @@ import Link from "next/link"
 export default function Category({ category }: { category: Category }) {
     return (
         <>
-            <Link href={`/category/${category.id}`}>
+            <Link href={`/app/category/${category.id}`}>
                 <Card className="cursor-pointer transition-colors dark:hover:bg-slate-900/70">
                     <CardHeader>
                         <img

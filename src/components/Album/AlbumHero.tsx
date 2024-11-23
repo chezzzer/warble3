@@ -45,18 +45,15 @@ export default function AlbumHero({
                                     </Badge>
                                     <Circle size={6} weight="fill" />
                                     {album.artists.map((a, i) => (
-                                        <>
-                                            <Link
-                                                key={a.id}
-                                                href={`/artist/${a.id}`}
-                                                className="underline underline-offset-2"
-                                            >
-                                                {a.name}
-                                                {i !==
-                                                    album.artists.length - 1 &&
-                                                    ","}
-                                            </Link>{" "}
-                                        </>
+                                        <Link
+                                            key={a.id}
+                                            href={`/app/artist/${a.id}`}
+                                            className="underline underline-offset-2"
+                                        >
+                                            {a.name}
+                                            {i !== album.artists.length - 1 &&
+                                                ","}
+                                        </Link>
                                     ))}
                                     <Circle
                                         className="opacity-75"

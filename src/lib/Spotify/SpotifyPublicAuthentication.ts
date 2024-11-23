@@ -1,7 +1,7 @@
 export async function getAccessToken(): Promise<string | null> {
     const sourceRes = await fetch("https://open.spotify.com/", {
         next: {
-            revalidate: 60,
+            revalidate: 1000,
         },
     })
     const source = await sourceRes.text()

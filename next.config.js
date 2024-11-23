@@ -7,7 +7,15 @@ await import("./src/env.js")
 /** @type {import("next").NextConfig} */
 const config = {
     reactStrictMode: false,
+    async redirects() {
+        return [
+            {
+                source: "/",
+                destination: "/app/",
+                permanent: true,
+            },
+        ]
+    },
 }
 
 export default config
-

@@ -2,26 +2,33 @@ import Link from "next/link"
 import ArtistList from "../Artist/ArtistList"
 import type { RequestItem } from "@/server/api/routers/request"
 import { useSpotify } from "@/lib/Context/SpotifyContext"
-import { secondsToTime } from "@/lib/utils"
-import { getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
+import { cn, secondsToTime } from "@/lib/utils"
+import { getLargestImage, getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
 import { Badge } from "../ui/badge"
 
 export default function QueueItem({
     request,
     playingIn,
+    display,
 }: {
     request: RequestItem
     playingIn?: number
+    display?: boolean
 }) {
     return (
-        <div className="flex items-center gap-3">
+        <div className={cn("flex items-center", display ? "gap-10" : "gap-3")}>
             <div>
-                <Link href={`/album/${request.track.album.id}`}>
+                <Link href={`/app/album/${request.track.album.id}`}>
                     <img
                         alt={request.track.name}
-                        src={getSmallestImage(request.track.album.images).url}
-                        width={75}
-                        height={75}
+                        src={
+                            (display
+                                ? getLargestImage(request.track.album.images)
+                                : getSmallestImage(request.track.album.images)
+                            ).url
+                        }
+                        width={display ? 200 : 75}
+                        height={display ? 200 : 75}
                         className="rounded-lg shadow-lg"
                     />
                 </Link>
@@ -39,10 +46,15 @@ export default function QueueItem({
                         </Badge>
                     )}
                 </div>
-                <p className="mt-1 text-lg font-bold leading-[20px]">
+                <p
+                    className={cn(
+                        display ? "text-3xl" : "text-lg",
+                        "mt-1 font-bold"
+                    )}
+                >
                     {request.track.name}
                 </p>
-                <p className="leading-[20px] opacity-75">
+                <p className={cn(display && "text-2xl", "opacity-75")}>
                     <ArtistList artists={request.track.artists} />
                 </p>
             </div>

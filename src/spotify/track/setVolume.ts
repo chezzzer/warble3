@@ -5,6 +5,8 @@ import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
 
 const KARAOKE_VOLUME = 100
 const VOLUME = 50
+// const KARAOKE_VOLUME = 0
+// const VOLUME = 0
 
 let currentlyPlayingId: string | null = null
 
@@ -16,6 +18,10 @@ export default async function setVolume() {
     }
 
     const context = JSON.parse(contextJson.state_json) as PlaybackState
+
+    if (!context || !context.item) {
+        return
+    }
 
     if (currentlyPlayingId !== context.item.id) {
         currentlyPlayingId = context.item.id

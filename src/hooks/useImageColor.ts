@@ -1,11 +1,18 @@
 import { getLuminance } from "@/lib/Misc/ColorHelper"
 import { SyntheticEvent, useMemo, useState } from "react"
 
-export default function useImageColor(alpha: number = 1) {
+export default function useImageColor(
+    alpha: number = 1,
+    accent: boolean = true
+) {
     const [color, setColor] = useState<string>()
 
     function onLoad(e: SyntheticEvent<HTMLImageElement, Event>) {
-        setColor(getAccentColorFromImageElement(e.currentTarget, alpha))
+        setColor(
+            accent
+                ? getAccentColorFromImageElement(e.currentTarget, alpha)
+                : getAverageColorFromImage(e.currentTarget, alpha)
+        )
     }
 
     const luminance = useMemo(() => {
@@ -90,7 +97,32 @@ function getAccentColorFromImageElement(
     return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-function getAverageColor(data: Uint8ClampedArray): string {
+function getAverageColorFromImage(
+    img: HTMLImageElement,
+    alpha: number = 1
+): string {
+    const canvas = document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+
+    if (!ctx) {
+        throw new Error("Could not get 2D context from canvas")
+    }
+
+    // Resize image for faster processing
+    const scaleFactor = Math.min(1, 100 / Math.max(img.width, img.height))
+    const width = Math.round(img.width * scaleFactor)
+    const height = Math.round(img.height * scaleFactor)
+
+    canvas.width = width
+    canvas.height = height
+    ctx.drawImage(img, 0, 0, width, height)
+
+    const imageData = ctx.getImageData(0, 0, width, height)
+    const data = imageData.data
+    return getAverageColor(data, alpha)
+}
+
+function getAverageColor(data: Uint8ClampedArray, alpha: number = 1): string {
     let r = 0,
         g = 0,
         b = 0
@@ -106,5 +138,5 @@ function getAverageColor(data: Uint8ClampedArray): string {
     g = Math.round(g / totalPixels)
     b = Math.round(b / totalPixels)
 
-    return `rgba(${r}, ${g}, ${b}, 1)`
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }

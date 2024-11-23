@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes"
 
 export default function testPage() {
+    // eslint-disable-next-line
     const { theme, setTheme } = useTheme()
 
     return (

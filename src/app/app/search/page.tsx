@@ -19,7 +19,6 @@ const getCategoriesCache = unstable_cache(
 
 export default async function Search() {
     const categories = await getCategoriesCache()
-
     return (
         <>
             <Suspense>

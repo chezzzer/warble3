@@ -13,7 +13,7 @@ export default function SearchHero() {
     const params = useSearchParams()
 
     useEffect(() => {
-        router.replace(`/search/?query=${search}`)
+        router.replace(`?query=${search}`)
     }, [search])
 
     useEffect(() => {

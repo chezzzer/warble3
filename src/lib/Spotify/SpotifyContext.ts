@@ -48,8 +48,15 @@ export default class SpotifyContext {
             this.state === undefined ||
             this.state?.timestamp !== state?.timestamp
         ) {
-            this.events.emit("progress", 0)
+            this.events.emit("progress", state?.progress_ms ?? 0)
             this.events.emit("change", state)
+        }
+
+        if (
+            this.state === undefined ||
+            this.state?.item?.id !== state?.item?.id
+        ) {
+            this.events.emit("track", state)
         }
 
         if (state?.is_playing) {

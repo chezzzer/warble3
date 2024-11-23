@@ -17,10 +17,27 @@ export default async function removeQueue() {
     const context = JSON.parse(contextJson.state_json) as PlaybackState
 
     if (context.item.id === firstInQueue.spotifyId) {
-        await db.request.delete({
+        await db.request.update({
             where: {
                 id: firstInQueue.id,
             },
+            data: {
+                current: true,
+            },
         })
+    } else {
+        const currentRequest = await db.request.findFirst({
+            where: {
+                current: true,
+            },
+        })
+
+        if (currentRequest) {
+            await db.request.delete({
+                where: {
+                    id: currentRequest.id,
+                },
+            })
+        }
     }
 }

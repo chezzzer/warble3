@@ -15,7 +15,7 @@ export default function ArtistPinnedItem({
     const { type, id } = extractUri(item.item.uri)
 
     return (
-        <Link href={`/${type}/${id}`}>
+        <Link href={`/app/${type}/${id}`}>
             <div
                 className="dark flex h-[250px] w-full flex-col justify-between rounded-lg p-5 text-white"
                 style={{

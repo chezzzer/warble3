@@ -27,7 +27,7 @@ export default function ThemeSelector() {
     if (currentTheme === "dark") {
         return (
             <div
-                className="cursor-pointer rounded-full bg-black p-2 text-white shadow-lg"
+                className="cursor-pointer rounded-full bg-slate-900 p-2 text-white shadow-lg"
                 onClick={() => setTheme("light")}
             >
                 <Sun size={23} />

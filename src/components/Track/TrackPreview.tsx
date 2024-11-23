@@ -23,6 +23,7 @@ export default function TrackPreview({
     const [isPlaying, setIsPlaying] = useState(false)
 
     useEffect(() => {
+        if (wavesurfer) wavesurfer.setVolume(0.5)
         setIsPlaying(false)
     }, [wavesurfer])
 

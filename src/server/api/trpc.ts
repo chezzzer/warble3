@@ -6,11 +6,14 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server"
+import { initTRPC, TRPCError } from "@trpc/server"
 import superjson from "superjson"
 import { ZodError } from "zod"
 
 import { db } from "@/server/db"
+import { getServerSession, Session } from "next-auth"
+import { authOptions, getTokenFromHeaders } from "@/lib/Auth/auth"
+import { getToken } from "next-auth/jwt"
 
 /**
  * 1. CONTEXT
@@ -24,10 +27,22 @@ import { db } from "@/server/db"
  *
  * @see https://trpc.io/docs/server/context
  */
+
 export const createTRPCContext = async (opts: { headers: Headers }) => {
+    const token = await getTokenFromHeaders(opts.headers)
+
+    const user =
+        token &&
+        (await db.admins.findFirst({
+            where: {
+                id: Number(token.sub),
+            },
+        }))
+
     return {
+        user,
+        headers: opts.headers,
         db,
-        ...opts,
     }
 }
 
@@ -101,6 +116,17 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
     return result
 })
 
+const authMiddleware = t.middleware(async ({ next, path, ctx }) => {
+    if (!ctx.user) {
+        throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "You must be logged in to access this resource",
+        })
+    }
+
+    return await next()
+})
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -110,3 +136,6 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  */
 export const publicProcedure = t.procedure.use(timingMiddleware)
 
+export const authProcedure = t.procedure
+    .use(timingMiddleware)
+    .use(authMiddleware)

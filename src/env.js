@@ -19,6 +19,9 @@ export const env = createEnv({
 
         //Lyrics
         MUSIXMATCH_USERTOKENS: z.string(),
+
+        ADMIN_PASSWORD: z.string(),
+        AUTH_SECRET: z.string(),
     },
 
     /**
@@ -41,6 +44,8 @@ export const env = createEnv({
         SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
         SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
         MUSIXMATCH_USERTOKENS: process.env.MUSIXMATCH_USERTOKENS,
+        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+        AUTH_SECRET: process.env.AUTH_SECRET,
         // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     },
     /**

@@ -65,7 +65,7 @@ export default function NowPlaying() {
                     <HoverCardContent side="right" className="w-80">
                         <div className="flex items-center gap-5">
                             <div className="w-[80px]">
-                                <Link href={"/album/" + track.album.id}>
+                                <Link href={"/app/album/" + track.album.id}>
                                     <img
                                         src={
                                             getSmallestImage(track.album.images)

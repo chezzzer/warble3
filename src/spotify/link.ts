@@ -24,7 +24,7 @@ const start = async () => {
 
         await SpotifyProvider.replaceAccessToken(data)
 
-        return `Linked to ${profile.email}`
+        return `Linked to ${profile.display_name}`
     })
 
     await fastify.listen({ port: 3000 })
@@ -71,4 +71,3 @@ function generateState() {
     }
     return result
 }
-

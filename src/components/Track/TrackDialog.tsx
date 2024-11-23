@@ -1,3 +1,4 @@
+"use client"
 import { Plus } from "@phosphor-icons/react"
 import { Track } from "@spotify/web-api-ts-sdk"
 import { Smartphone } from "lucide-react"
@@ -42,7 +43,7 @@ export default function TrackDialog({
                 <div className="relative flex flex-col gap-3">
                     <DialogHeader>
                         <div className="flex items-center gap-8">
-                            <Link href={`/album/${track.album.id}`}>
+                            <Link href={`/app/album/${track.album.id}`}>
                                 <img
                                     alt={track.name}
                                     src={
@@ -56,7 +57,7 @@ export default function TrackDialog({
                                 />
                             </Link>
                             <div className="flex-1">
-                                <Link href={`/album/${track.album.id}`}>
+                                <Link href={`/app/album/${track.album.id}`}>
                                     <DialogTitle className="text-2xl font-semibold dark:text-white">
                                         {track.name}
                                     </DialogTitle>

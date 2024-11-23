@@ -17,7 +17,7 @@ export default function Playlist({
 }) {
     return (
         <>
-            <Link href={`/playlist/${playlist.id}`}>
+            <Link href={`/app/playlist/${playlist.id}`}>
                 <Card className="cursor-pointer transition-colors dark:hover:bg-slate-900/70">
                     <CardHeader>
                         <img

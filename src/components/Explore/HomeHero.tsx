@@ -35,10 +35,10 @@ async function getHomeArtist() {
             getExtraArtistInfo(id),
         ])
 
-        return [artist, artistInfo] as [Artist, ArtistInfo | null]
+        return [artist, artistInfo] as [Artist, ArtistInfo]
     } catch (e) {
         console.error("Error with fetching home artist", e)
-        return null
+        return [null, null] as [Artist, ArtistInfo]
     }
 }
 
@@ -75,7 +75,7 @@ export default async function HomeHero() {
                         </div>
                     </div>
                     <div>
-                        <Link href={`/artist/${artist.id}`}>
+                        <Link href={`/app/artist/${artist.id}`}>
                             <Button className="flex items-center gap-3 rounded-full">
                                 Explore Tracks <ArrowRight size={22} />
                             </Button>

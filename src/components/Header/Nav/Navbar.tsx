@@ -10,19 +10,19 @@ import {
 import Link from "next/link"
 import NowPlaying from "./NowPlaying"
 import { usePathname, useRouter } from "next/navigation"
-import Queue from "./Queue"
+import Queue from "../../Queue/Queue"
 import ThemeSelector from "../ThemeSelector"
 
 export default function Navbar() {
     const items = [
         {
             name: "Explore",
-            href: "/",
+            href: "/app",
             icon: Compass,
         },
         {
             name: "Search",
-            href: "/search",
+            href: "/app/search",
             icon: MagnifyingGlass,
         },
     ]

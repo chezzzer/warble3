@@ -8,7 +8,7 @@ import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 export default function Artist({ artist }: { artist: Artist }) {
     return (
         <>
-            <Link href={`/artist/${artist.id}`}>
+            <Link href={`/app/artist/${artist.id}`}>
                 <Card className="cursor-pointer transition-colors dark:hover:bg-slate-900/70">
                     <CardHeader>
                         <img

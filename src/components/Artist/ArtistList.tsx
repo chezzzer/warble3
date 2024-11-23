@@ -12,7 +12,7 @@ export default function ArtistList({
                 <>
                     <Link
                         key={artist.id}
-                        href={`/artist/${artist.id}`}
+                        href={`/app/artist/${artist.id}`}
                         className="underline"
                     >
                         {artist.name}

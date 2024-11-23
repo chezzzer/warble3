@@ -49,7 +49,11 @@ export const requestRouter = createTRPCRouter({
     get: publicProcedure.query(async () => {
         const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        const requests = await db.request.findMany()
+        const requests = await db.request.findMany({
+            where: {
+                current: false,
+            },
+        })
 
         if (requests.length === 0) {
             return []
@@ -65,8 +69,16 @@ export const requestRouter = createTRPCRouter({
         }))
     }),
 
+    current: publicProcedure.query(async () => {
+        return await db.request.findFirst({
+            where: {
+                current: true,
+            },
+        })
+    }),
+
     onChange: publicProcedure.subscription(async () => {
-        let queueIdSum: string | null = null
+        let queueBodyLength: number | null = null
         const spotify = await SpotifyProvider.makeFromDatabaseCache()
         return observable<RequestItem[]>((emit) => {
             const sendRequests = async () => {
@@ -92,11 +104,13 @@ export const requestRouter = createTRPCRouter({
             const check = async () => {
                 const queue = await db.request.findMany()
 
-                if (queueIdSum === queue.map((q) => q.id).join("")) {
+                const control = JSON.stringify(queue).length
+
+                if (queueBodyLength === control) {
                     return
                 }
 
-                queueIdSum = queue.map((q) => q.id).join("")
+                queueBodyLength = control
 
                 await sendRequests()
             }
