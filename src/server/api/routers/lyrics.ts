@@ -2,11 +2,27 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { observable } from "@trpc/server/observable"
 import { PlaybackState, SpotifyApi, Track } from "@spotify/web-api-ts-sdk"
 import SpotifyContext from "@/lib/Spotify/SpotifyContext"
-import { getLyricsFallback, LyricLine } from "@/lib/Lyrics/LyricsCacheProvider"
+import {
+    getLyricsDataFallback,
+    getLyricsFallback,
+    LyricLine,
+} from "@/lib/Lyrics/LyricsCacheProvider"
 import { Progress } from "@/lib/Context/SpotifyContext"
 import { LyricEvent } from "@/lib/Events/LyricEvent"
+import { LyricsRedisCache } from "@/lib/Lyrics/LyricsRedisCache"
+import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
+import musixmatch from "@/lib/Lyrics/LyricsProvider"
+import { z } from "zod"
+import getLyricsInfo from "@/lib/Lyrics/LyricsInfo"
 
 export const lyricsRouter = createTRPCRouter({
+    getLyricInfo: publicProcedure
+        .input(z.object({ isrc: z.string() }))
+
+        .query(async ({ input }) => {
+            return await getLyricsInfo(input.isrc)
+        }),
+
     subscribe: publicProcedure.subscription(async () => {
         return observable<
             | LyricEvent<PlaybackState | null>

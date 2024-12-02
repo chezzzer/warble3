@@ -10,13 +10,13 @@ import {
 } from "../ui/carousel"
 import { readFile, writeFile } from "fs/promises"
 import TrackCarousel from "../Track/TrackCarousel"
+import InLineError from "../Misc/InLineError"
 
 async function getRecommendations() {
     const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
     return await spotify.recommendations.get({
         seed_genres: ["pop", "rock-n-roll", "britpop"],
-        seed_artists: ["3yY2gUcIsjMr8hjo51PoJ8"],
         limit: 50,
     })
 }
@@ -30,12 +30,16 @@ const getRecommendationsCache = unstable_cache(
 )
 
 export default async function RecommendedTracks() {
-    const recommendations = await getRecommendationsCache()
+    try {
+        const recommendations = await getRecommendationsCache()
 
-    return (
-        <>
-            <h1 className="mb-3 mt-10 px-5 text-2xl">Recommended</h1>
-            <TrackCarousel tracks={recommendations.tracks} />
-        </>
-    )
+        return (
+            <>
+                <h1 className="mb-3 mt-10 px-5 text-2xl">Recommended</h1>
+                <TrackCarousel tracks={recommendations.tracks} />
+            </>
+        )
+    } catch {
+        return <InLineError error={<>Unable to load recommendations</>} />
+    }
 }

@@ -1,23 +1,19 @@
+import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { warbleLog } from "@/lib/Warble"
 import { db } from "@/server/db"
 import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
 
-const KARAOKE_VOLUME = 100
-const VOLUME = 50
-// const KARAOKE_VOLUME = 0
-// const VOLUME = 0
+const spotifyPlaybackState = new SpotifyPlaybackState()
 
 let currentlyPlayingId: string | null = null
 
 export default async function setVolume() {
-    const contextJson = await db.spotifyPlaybackState.findFirst()
+    const context = await spotifyPlaybackState.get()
 
-    if (!contextJson) {
+    if (!context) {
         return
     }
-
-    const context = JSON.parse(contextJson.state_json) as PlaybackState
 
     if (!context || !context.item) {
         return
@@ -37,10 +33,28 @@ export default async function setVolume() {
 
         if (firstInQueue?.spotifyId === context.item.id) {
             warbleLog("Setting volume to karaoke")
-            await spotify.player.setPlaybackVolume(KARAOKE_VOLUME)
+            const volume = await db.settings.findFirst({
+                where: {
+                    name: "lyrics.karaoke_volume",
+                },
+            })
+            if (volume) {
+                await spotify.player.setPlaybackVolume(
+                    Number.parseInt(volume.value)
+                )
+            }
         } else {
             warbleLog("Setting volume to normal")
-            await spotify.player.setPlaybackVolume(VOLUME)
+            const volume = await db.settings.findFirst({
+                where: {
+                    name: "lyrics.volume",
+                },
+            })
+            if (volume) {
+                await spotify.player.setPlaybackVolume(
+                    Number.parseInt(volume.value)
+                )
+            }
         }
     }
 }

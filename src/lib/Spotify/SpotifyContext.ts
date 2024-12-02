@@ -1,11 +1,13 @@
 import { db } from "@/server/db"
 import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
 import EventEmitter from "events"
+import { SpotifyPlaybackState } from "./SpotifyPlaybackState"
 
 export default class SpotifyContext {
     public events: EventEmitter = new EventEmitter()
 
     private state: PlaybackState | null | undefined = undefined
+    private spotifyPlaybackState = new SpotifyPlaybackState()
 
     static make(): SpotifyContext {
         const context = new SpotifyContext()
@@ -31,18 +33,14 @@ export default class SpotifyContext {
     }
 
     public startTracking(interval: number): NodeJS.Timeout {
-        this.updateFromDatabase()
+        this.updateFromPlaybackState()
         return setInterval(() => {
-            this.updateFromDatabase()
+            this.updateFromPlaybackState()
         }, interval)
     }
 
-    private async updateFromDatabase(): Promise<void> {
-        const spotifyPlaybackState = await db.spotifyPlaybackState.findFirst()
-
-        const state: PlaybackState | null = spotifyPlaybackState
-            ? JSON.parse(spotifyPlaybackState.state_json)
-            : null
+    private async updateFromPlaybackState(): Promise<void> {
+        const state = await this.spotifyPlaybackState.get()
 
         if (
             this.state === undefined ||

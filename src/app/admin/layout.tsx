@@ -13,6 +13,7 @@ import AdminNav from "@/components/Admin/AdminNav"
 import { SpotifyProvider } from "@/lib/Context/SpotifyContext"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { QueueProvider } from "@/lib/Context/QueueContext"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
     title: "WARBLE - Lyrics",
@@ -53,6 +54,7 @@ export default async function RootLayout({
                             </SpotifyProvider>
                         </QueueProvider>
                     </TRPCReactProvider>
+                    <Toaster />
                 </ThemeProvider>
             </body>
         </html>

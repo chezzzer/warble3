@@ -19,11 +19,13 @@ export const playerRouter = createTRPCRouter({
 
         const context = await spotify.player.getCurrentlyPlayingTrack()
 
-        if (context.context.type === "playlist") {
+        if (context?.context?.type === "playlist") {
             return await spotify.playlists.getPlaylist(
                 extractUri(context.context.uri).id
             )
         }
+
+        return null
     }),
 
     subscribe: publicProcedure.subscription(async () => {

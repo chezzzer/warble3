@@ -2,12 +2,18 @@ import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { unstable_cache } from "next/cache"
 import TrackCarousel from "../Track/TrackCarousel"
 import { shuffleArray } from "@/lib/utils"
+import { Warning } from "@phosphor-icons/react/dist/ssr"
+import InLineError from "../Misc/InLineError"
 
 const getFeaturedPlaylistCache = unstable_cache(
     async (id: string) => {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+        try {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        return spotify.playlists.getPlaylist(id)
+            return await spotify.playlists.getPlaylist(id)
+        } catch {
+            return null
+        }
     },
     ["homeArtist"],
     { tags: ["homeArtist"] }
@@ -15,6 +21,18 @@ const getFeaturedPlaylistCache = unstable_cache(
 
 export default async function FeaturedPlaylist({ id }: { id: string }) {
     const playlist = await getFeaturedPlaylistCache(id)
+
+    if (!playlist) {
+        return (
+            <InLineError
+                error={
+                    <>
+                        Unable to load <pre>spotify:playlist:{id}</pre>
+                    </>
+                }
+            />
+        )
+    }
 
     return (
         <>

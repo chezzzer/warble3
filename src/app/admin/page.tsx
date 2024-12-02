@@ -1,6 +1,6 @@
 import PlaylistContext from "@/components/Admin/Home/PlaylistContext"
 import NowPlaying from "@/components/Admin/Home/NowPlaying"
-import QueueList from "@/components/Queue/QueueList"
+import LyricStatus from "@/components/Admin/Home/LyricStatus"
 
 export default async function AdminHome() {
     return (
@@ -9,6 +9,9 @@ export default async function AdminHome() {
                 <NowPlaying />
                 <div>
                     <PlaylistContext />
+                </div>
+                <div>
+                    <LyricStatus />
                 </div>
             </div>
         </>

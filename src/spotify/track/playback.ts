@@ -1,7 +1,7 @@
+import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
-import { warbleLog } from "@/lib/Warble"
-import { db } from "@/server/db"
-import { Track } from "@spotify/web-api-ts-sdk"
+
+const spotifyPlaybackState = new SpotifyPlaybackState()
 
 export default async function trackPlayback() {
     const spotify = await SpotifyProvider.makeFromDatabaseCache()
@@ -10,22 +10,11 @@ export default async function trackPlayback() {
         .getPlaybackState()
         .then(async (context) => {
             if (context === null) {
-                await db.spotifyPlaybackState.deleteMany()
+                spotifyPlaybackState.clear()
                 return
             }
 
-            await db.spotifyPlaybackState.upsert({
-                where: {
-                    id: 1,
-                },
-                update: {
-                    state_json: JSON.stringify(context),
-                },
-                create: {
-                    id: 1,
-                    state_json: JSON.stringify(context),
-                },
-            })
+            await spotifyPlaybackState.set(context)
         })
         .catch(console.error)
 }

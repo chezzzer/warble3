@@ -28,19 +28,6 @@ model SpotifyCredentials {
     tokenType    String
 }
 
-model SpotifyPlaybackState {
-    id         Int    @id @default(autoincrement())
-    state_json String
-}
-
-model LyricCache {
-    isrc        String
-    lyrics_json String
-    type        String
-
-    @@id([isrc, type])
-}
-
 model Admins {
     id        Int      @id @default(autoincrement())
     username  String
@@ -56,4 +43,14 @@ model Settings {
     updatedAt DateTime @updatedAt
 
     @@id([name])
+}
+
+model Layout {
+    id        Int      @id @default(autoincrement())
+    name      String
+    row_type  String
+    row_data  String
+    position  Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

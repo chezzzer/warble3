@@ -1,5 +1,8 @@
+import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
 import { db } from "@/server/db"
 import { PlaybackState } from "@spotify/web-api-ts-sdk"
+
+const spotifyPlaybackState = new SpotifyPlaybackState()
 
 export default async function removeQueue() {
     const firstInQueue = await db.request.findFirst()
@@ -8,13 +11,11 @@ export default async function removeQueue() {
         return
     }
 
-    const contextJson = await db.spotifyPlaybackState.findFirst()
+    const context = await spotifyPlaybackState.get()
 
-    if (!contextJson) {
+    if (!context) {
         return
     }
-
-    const context = JSON.parse(contextJson.state_json) as PlaybackState
 
     if (context.item.id === firstInQueue.spotifyId) {
         await db.request.update({

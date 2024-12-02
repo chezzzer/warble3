@@ -1,29 +1,52 @@
-# Create T3 App
+# Warble 3
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is my third rendition of Warble, a Spotify karaoke app, using Musixmatch for lyrics and Spotify for playback. This time it features a fully fleshed out picker, so it's not just searching this time, and also features a better queue system with names for each song. I've also tried a few new technologies, like NextAuth for authentication and tRPC for the backend, which has been a journey of its own.
 
-## What's next? How do I make an app with this?
+Don't expect this to be maintained, but feel free to learn and fork it. There's no license, so you can do whatever you want with it.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Please note:
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+This app is literally illegal if used in a production environment. I'm not responsible for any damages that may occur from using this app. The reason
+for this is that it's using an exploit in MusixMatch to get the lyrics, which is against their terms of service. There is also some fun stuff in here like
+regex-ing a public Spotify token to get an artists banner, which isn't available via their API and no license is given for this image to be used anywhere.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+This is purely a passion project that I plan to use for New Year's Eve and other party occasions.
 
-## Learn More
+## Setup
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+I'm not going to provide a massive deal of documentation here, but I will try to explain how to set this up.
+To start, I recommend using bun to run the project.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+Copy `.env.example` to `.env` and fill in the values.
+For a guide on musixmatch usertokens, see [my guide on npm](https://www.npmjs.com/package/musixmatch-richsync).
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+```
+bun install
+bun run spotify:setup
+```
 
-## How do I deploy this?
+This will open a Spotify oauth page. It'll ask you to log in, and then give a confirmation code in the console.
+Alternatively you can put the authorization into the database in the SpotifyCredentials model.
+CTRL+C out of the link server when the confirm message is shown.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+Now to run the application, run these three commands in separate terminals.
+
+```
+bun run dev
+bun run spotify:track
+docker-compose up -d
+```
+
+This will start the NextJS dev server, the Spotify playback tracker, and the Redis server.
+
+For production, build the app and then run it with `bun run build && bun run start`.
+
+## Technologies
+
+-   [Next.js](https://nextjs.org)
+-   [NextAuth.js](https://next-auth.js.org)
+-   [Prisma](https://prisma.io)
+-   [Tailwind CSS](https://tailwindcss.com)
+-   [tRPC](https://trpc.io)
+-   [Spotify](https://developer.spotify.com/)
+-   [MusixMatch](https://musixmatch.com/)

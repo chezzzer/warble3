@@ -1,0 +1,16 @@
+procs:
+    dev:
+        shell: "bun run dev"
+    track:
+        shell: "bun run spotify:track"
+    setup:
+        autostart: false
+        shell: "bun run spotify:setup"
+    redis:
+        shell: "docker compose -f redis-compose.yaml up"
+    start:
+        autostart: false
+        shell: "bun run start"
+    build:
+        autostart: false
+        shell: "bun run build"

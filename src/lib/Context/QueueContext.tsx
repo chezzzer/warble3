@@ -14,6 +14,7 @@ function useProviderValue() {
 
     api.request.onChange.useSubscription(undefined, {
         onData: (requests) => {
+            console.log(requests)
             setQueue(
                 requests.filter((r) => !r.current) as unknown as RequestItem[]
             )

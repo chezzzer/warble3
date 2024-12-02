@@ -5,7 +5,13 @@ import { useQueue } from "@/lib/Context/QueueContext"
 import { useSpotify } from "@/lib/Context/SpotifyContext"
 import { MaskSad } from "@phosphor-icons/react"
 
-export default function QueueList({ display }: { display?: boolean }) {
+export default function QueueList({
+    display,
+    adminControls,
+}: {
+    display?: boolean
+    adminControls?: boolean
+}) {
     const { queue } = useQueue()
     const { progress, track } = useSpotify()
     return (
@@ -22,7 +28,9 @@ export default function QueueList({ display }: { display?: boolean }) {
                             request={item}
                             key={item.id}
                             display={display}
+                            adminControls={adminControls}
                             playingIn={
+                                track &&
                                 (track.duration_ms - progress + amount) / 1000
                             }
                         />

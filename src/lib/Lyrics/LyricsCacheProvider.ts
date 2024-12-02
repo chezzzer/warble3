@@ -4,7 +4,9 @@ import {
     MusixmatchSubtitle,
 } from "musixmatch-richsync"
 import musixmatch from "./LyricsProvider"
-import { db } from "@/server/db"
+import { LyricsRedisCache } from "./LyricsRedisCache"
+
+const lyricsRedisCache = new LyricsRedisCache()
 
 export type LyricLine = {
     start: number
@@ -34,37 +36,47 @@ function consolidateLyricType(
 export async function getLyricsFallback(isrc: string) {
     try {
         const richsync = await getRichsyncLyrics(isrc)
+        if (!richsync.richsync_body) {
+            throw new Error("No richsync body found")
+        }
         return consolidateLyricType(richsync.richsync_body)
     } catch {
         console.log("Falling back to subtitles")
         const subtitle = await getSubtitleLyrics(isrc)
+        if (!subtitle.subtitle_body) {
+            throw new Error("No richsync body found")
+        }
         return consolidateLyricType(subtitle.subtitle_body)
+    }
+}
+
+export async function getLyricsDataFallback(isrc: string) {
+    try {
+        const richsync = await getRichsyncLyrics(isrc)
+        return richsync
+    } catch {
+        console.log("Falling back to subtitles")
+        const subtitle = await getSubtitleLyrics(isrc)
+        return subtitle
     }
 }
 
 export async function getRichsyncLyrics(
     isrc: string
 ): Promise<MusixmatchLyrics> {
-    const cachedLyrics = await db.lyricCache.findFirst({
-        where: {
-            type: musixmatch.LYRIC_TYPES.RICHSYNC,
-            isrc,
-        },
-    })
+    const cacheKey = lyricsRedisCache.generateKey(
+        isrc,
+        musixmatch.LYRIC_TYPES.SUBTITLES
+    )
+    const cachedLyrics = await lyricsRedisCache.get(cacheKey)
 
     if (cachedLyrics) {
-        return JSON.parse(cachedLyrics.lyrics_json) as MusixmatchLyrics
+        return cachedLyrics
     }
 
     const track = await musixmatch.getRichsyncLyrics(isrc)
 
-    await db.lyricCache.create({
-        data: {
-            isrc,
-            lyrics_json: JSON.stringify(track),
-            type: musixmatch.LYRIC_TYPES.RICHSYNC,
-        },
-    })
+    await lyricsRedisCache.set(cacheKey, track)
 
     return track
 }
@@ -72,26 +84,19 @@ export async function getRichsyncLyrics(
 export async function getSubtitleLyrics(
     isrc: string
 ): Promise<MusixmatchLyrics> {
-    const cachedLyrics = await db.lyricCache.findFirst({
-        where: {
-            type: musixmatch.LYRIC_TYPES.SUBTITLES,
-            isrc,
-        },
-    })
+    const cacheKey = lyricsRedisCache.generateKey(
+        isrc,
+        musixmatch.LYRIC_TYPES.SUBTITLES
+    )
+    const cachedLyrics = await lyricsRedisCache.get(cacheKey)
 
     if (cachedLyrics) {
-        return JSON.parse(cachedLyrics.lyrics_json) as MusixmatchLyrics
+        return cachedLyrics
     }
 
     const track = await musixmatch.getSubtitleLyrics(isrc)
 
-    await db.lyricCache.create({
-        data: {
-            isrc,
-            lyrics_json: JSON.stringify(track),
-            type: musixmatch.LYRIC_TYPES.SUBTITLES,
-        },
-    })
+    await lyricsRedisCache.set(cacheKey, track)
 
     return track
 }

@@ -21,7 +21,7 @@ export default function AdminNav() {
     const pathname = usePathname()
 
     return (
-        <nav className="bg-slate-950 px-4 pt-20">
+        <nav className="border-b bg-slate-950 px-4 pt-20">
             <div className="mx-auto max-w-7xl py-4">
                 <div className="flex justify-between gap-4">
                     <div>

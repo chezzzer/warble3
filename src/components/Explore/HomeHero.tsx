@@ -31,8 +31,8 @@ async function getHomeArtist() {
         }
 
         const [artist, artistInfo] = await Promise.all([
-            spotify.artists.get(id),
-            getExtraArtistInfo(id),
+            await spotify.artists.get(id),
+            await getExtraArtistInfo(id),
         ])
 
         return [artist, artistInfo] as [Artist, ArtistInfo]
@@ -52,6 +52,10 @@ const getHomeArtistCache = unstable_cache(
 
 export default async function HomeHero() {
     const [artist, artistInfo] = await getHomeArtistCache()
+
+    if (!artist) {
+        return <div>&nbsp;</div>
+    }
 
     return (
         <>

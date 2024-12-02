@@ -19,9 +19,15 @@ export const env = createEnv({
 
         //Lyrics
         MUSIXMATCH_USERTOKENS: z.string(),
+        MUSIXMATCH_API_KEY: z.string(),
 
-        ADMIN_PASSWORD: z.string(),
+        //Auth
         AUTH_SECRET: z.string(),
+
+        //Redis
+        REDIS_HOST: z.string(),
+        REDIS_PORT: z.string(),
+        REDIS_PASSWORD: z.string(),
     },
 
     /**
@@ -44,8 +50,11 @@ export const env = createEnv({
         SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
         SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
         MUSIXMATCH_USERTOKENS: process.env.MUSIXMATCH_USERTOKENS,
-        ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+        MUSIXMATCH_API_KEY: process.env.MUSIXMATCH_API_KEY,
         AUTH_SECRET: process.env.AUTH_SECRET,
+        REDIS_HOST: process.env.REDIS_HOST,
+        REDIS_PORT: process.env.REDIS_PORT,
+        REDIS_PASSWORD: process.env.REDIS_PASSWORD,
         // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     },
     /**

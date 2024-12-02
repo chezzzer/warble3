@@ -14,73 +14,81 @@ import ArtistAlbums from "./ArtistAlbums"
 import ArtistPopularAlbums from "./ArtistPopularAlbums"
 import ArtistSimilarTracks from "./ArtistSimilarTracks"
 import ArtistRelatedArtists from "./ArtistRelatedArtists"
+import InLineError from "../Misc/InLineError"
 
 export default async function ArtistPage({ artistId }: { artistId: string }) {
-    const spotify = await SpotifyProvider.makeFromDatabaseCache()
+    try {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-    const [
-        artist,
-        artistInfo,
-        topTracks,
-        albums,
-        relatedArtists,
-        similarTracks,
-    ] = await Promise.all([
-        spotify.artists.get(artistId),
-        getExtraArtistInfo(artistId),
-        spotify.artists.topTracks(artistId, "NZ"),
-        spotify.artists.albums(artistId, "album,single,appears_on,compilation"),
-        spotify.artists.relatedArtists(artistId),
-        spotify.recommendations.get({
-            seed_artists: [artistId],
-            limit: 20,
-        }),
-    ])
+        const [
+            artist,
+            artistInfo,
+            topTracks,
+            albums,
+            relatedArtists,
+            similarTracks,
+        ] = await Promise.all([
+            spotify.artists.get(artistId),
+            getExtraArtistInfo(artistId),
+            spotify.artists.topTracks(artistId, "NZ"),
+            spotify.artists.albums(
+                artistId,
+                "album,single,appears_on,compilation"
+            ),
+            spotify.artists.relatedArtists(artistId),
+            spotify.recommendations.get({
+                seed_artists: [artistId],
+                limit: 20,
+            }),
+        ])
 
-    return (
-        <div className="flex flex-col gap-10">
-            <div>
-                <ArtistHero artist={artist} artistInfo={artistInfo} />
-            </div>
-            <div className="flex gap-10 px-5">
-                <div className="flex-1">
-                    <ArtistTopTracks tracks={topTracks.tracks} />
+        return (
+            <div className="flex flex-col gap-10">
+                <div>
+                    <ArtistHero artist={artist} artistInfo={artistInfo} />
                 </div>
-                <div className="relative w-[400px]">
-                    <div className="flex flex-col gap-5">
-                        {artistInfo.profile.pinnedItem && (
-                            <ArtistPinnedItem
-                                item={artistInfo.profile.pinnedItem}
-                            />
-                        )}
-                        {artistInfo.stats && (
-                            <ArtistStats stats={artistInfo.stats} />
-                        )}
-                        {artistInfo.visuals.gallery.length > 0 && (
-                            <ArtistGallery
-                                images={artistInfo.visuals.gallery}
-                            />
-                        )}
-                        {artistInfo.profile.biography && (
-                            <ArtistBio bio={artistInfo.profile.biography} />
-                        )}
+                <div className="flex gap-10 px-5">
+                    <div className="flex-1">
+                        <ArtistTopTracks tracks={topTracks.tracks} />
+                    </div>
+                    <div className="relative w-[400px]">
+                        <div className="flex flex-col gap-5">
+                            {artistInfo.profile.pinnedItem && (
+                                <ArtistPinnedItem
+                                    item={artistInfo.profile.pinnedItem}
+                                />
+                            )}
+                            {artistInfo.stats && (
+                                <ArtistStats stats={artistInfo.stats} />
+                            )}
+                            {artistInfo.visuals.gallery.length > 0 && (
+                                <ArtistGallery
+                                    images={artistInfo.visuals.gallery}
+                                />
+                            )}
+                            {artistInfo.profile.biography && (
+                                <ArtistBio bio={artistInfo.profile.biography} />
+                            )}
+                        </div>
                     </div>
                 </div>
+                <div>
+                    <ArtistPopularAlbums
+                        albums={artistInfo.discography.popularReleases}
+                    />
+                </div>
+                <div>
+                    <ArtistAlbums albums={albums.items} />
+                </div>
+                <div>
+                    <ArtistRelatedArtists artists={relatedArtists.artists} />
+                </div>
+                <div>
+                    <ArtistSimilarTracks tracks={similarTracks.tracks} />
+                </div>
             </div>
-            <div>
-                <ArtistPopularAlbums
-                    albums={artistInfo.discography.popularReleases}
-                />
-            </div>
-            <div>
-                <ArtistAlbums albums={albums.items} />
-            </div>
-            <div>
-                <ArtistRelatedArtists artists={relatedArtists.artists} />
-            </div>
-            <div>
-                <ArtistSimilarTracks tracks={similarTracks.tracks} />
-            </div>
-        </div>
-    )
+        )
+    } catch {
+        return <InLineError error={<>Unable to load artist</>} />
+    }
 }

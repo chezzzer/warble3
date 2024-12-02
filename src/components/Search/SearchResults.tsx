@@ -66,7 +66,9 @@ export default function SearchResults({
                         Playlists
                     </h1>
                     <PlaylistCarousel
-                        playlists={items.playlists as Playlist[]}
+                        playlists={
+                            items.playlists.filter((p) => p) as Playlist[]
+                        }
                     />
                 </>
             )}

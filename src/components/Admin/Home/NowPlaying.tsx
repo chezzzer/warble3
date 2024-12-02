@@ -36,7 +36,7 @@ export default function NowPlaying() {
                     <div className="py-8 text-center">No song playing...</div>
                 )}
                 <hr className="my-5" />
-                <QueueList />
+                <QueueList adminControls={true} />
             </CardContent>
         </Card>
     )

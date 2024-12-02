@@ -12,6 +12,7 @@ import NowPlaying from "./NowPlaying"
 import { usePathname, useRouter } from "next/navigation"
 import Queue from "../../Queue/Queue"
 import ThemeSelector from "../ThemeSelector"
+import Time from "../Time"
 
 export default function Navbar() {
     const items = [
@@ -31,7 +32,8 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="fixed right-[30px] top-[30px] z-10">
+            <div className="fixed right-[30px] top-[30px] z-10 flex items-center gap-5">
+                <Time />
                 <ThemeSelector />
             </div>
             <div className="fixed z-50 h-screen w-[80px] border-r-[1px] border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900">
