@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation"
 import Queue from "../../Queue/Queue"
 import ThemeSelector from "../ThemeSelector"
 import Time from "../Time"
+import HistoryNavigation from "../HistoryNavigation"
 
 export default function Navbar() {
     const items = [
@@ -32,6 +33,9 @@ export default function Navbar() {
 
     return (
         <>
+            <div className="fixed left-[110px] top-[30px] z-10 flex items-center gap-5">
+                <HistoryNavigation />
+            </div>
             <div className="fixed right-[30px] top-[30px] z-10 flex items-center gap-5">
                 <Time />
                 <ThemeSelector />

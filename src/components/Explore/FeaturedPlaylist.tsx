@@ -36,7 +36,7 @@ export default async function FeaturedPlaylist({ id }: { id: string }) {
 
     return (
         <>
-            <h1 className="mb-3 mt-10 px-5 text-2xl opacity-75">
+            <h1 className="px-5 pb-3 pt-10 text-2xl opacity-75">
                 {playlist.name}
             </h1>
             <TrackCarousel

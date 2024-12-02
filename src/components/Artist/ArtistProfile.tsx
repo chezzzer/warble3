@@ -25,8 +25,8 @@ export default async function ArtistPage({ artistId }: { artistId: string }) {
             artistInfo,
             topTracks,
             albums,
-            relatedArtists,
-            similarTracks,
+            // relatedArtists,
+            // similarTracks,
         ] = await Promise.all([
             spotify.artists.get(artistId),
             getExtraArtistInfo(artistId),
@@ -35,11 +35,11 @@ export default async function ArtistPage({ artistId }: { artistId: string }) {
                 artistId,
                 "album,single,appears_on,compilation"
             ),
-            spotify.artists.relatedArtists(artistId),
-            spotify.recommendations.get({
-                seed_artists: [artistId],
-                limit: 20,
-            }),
+            // spotify.artists.relatedArtists(artistId),
+            // spotify.recommendations.get({
+            //     seed_artists: [artistId],
+            //     limit: 20,
+            // }),
         ])
 
         return (
@@ -81,14 +81,14 @@ export default async function ArtistPage({ artistId }: { artistId: string }) {
                     <ArtistAlbums albums={albums.items} />
                 </div>
                 <div>
-                    <ArtistRelatedArtists artists={relatedArtists.artists} />
+                    {/* <ArtistRelatedArtists artists={relatedArtists.artists} /> */}
                 </div>
                 <div>
-                    <ArtistSimilarTracks tracks={similarTracks.tracks} />
+                    {/* <ArtistSimilarTracks tracks={similarTracks.tracks} /> */}
                 </div>
             </div>
         )
-    } catch {
+    } catch (e) {
         return <InLineError error={<>Unable to load artist</>} />
     }
 }

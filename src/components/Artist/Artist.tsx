@@ -4,6 +4,7 @@ import type { Artist, SimplifiedAlbum, Track } from "@spotify/web-api-ts-sdk"
 import { Card, CardContent, CardHeader } from "../ui/card"
 import Link from "next/link"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
+import { useRouter } from "next/navigation"
 
 export default function Artist({ artist }: { artist: Artist }) {
     return (

@@ -1,5 +1,5 @@
 import { Badge } from "../ui/badge"
-import { limitArray } from "@/lib/utils"
+import { formatNumber, limitArray } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
 import { cache } from "react"
@@ -12,46 +12,31 @@ import { Artist } from "@spotify/web-api-ts-sdk"
 import { unstable_cache } from "next/cache"
 import { readFile, writeFile } from "fs/promises"
 import Link from "next/link"
-import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
+import { extractUri, getLargestImage } from "@/lib/Spotify/SpotifyUtils"
+import {
+    getPopularArtists,
+    getRandomPopularArtist,
+} from "@/lib/Spotify/SpotifyPopularArtists"
 
-async function getHomeArtist() {
-    try {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
-
-        const homeTracks = await spotify.recommendations.get({
-            seed_genres: ["pop", "rock-n-roll", "britpop"],
-            seed_artists: ["3yY2gUcIsjMr8hjo51PoJ8"],
-            limit: 1,
-        })
-
-        const id = homeTracks.tracks[0]?.artists[0]?.id!
-
-        if (!id) {
-            throw new Error("No valid tracks found")
-        }
-
-        const [artist, artistInfo] = await Promise.all([
-            await spotify.artists.get(id),
-            await getExtraArtistInfo(id),
-        ])
-
-        return [artist, artistInfo] as [Artist, ArtistInfo]
-    } catch (e) {
-        console.error("Error with fetching home artist", e)
-        return [null, null] as [Artist, ArtistInfo]
-    }
-}
-
-const getHomeArtistCache = unstable_cache(
+const getArtistCache = unstable_cache(
     async () => {
-        return await getHomeArtist()
+        return await getRandomPopularArtist()
     },
-    ["homeArtist"],
-    { revalidate: 120, tags: ["homeArtist"] }
+    ["artistCache"],
+    { tags: ["artistCache"] }
+)
+
+const getArtistInfoCache = unstable_cache(
+    async (id: string) => {
+        return await getExtraArtistInfo(id)
+    },
+    ["artistInfoCache"],
+    { tags: ["artistInfoCache"] }
 )
 
 export default async function HomeHero() {
-    const [artist, artistInfo] = await getHomeArtistCache()
+    const artist = await getArtistCache()
+    const artistInfo = await getArtistInfoCache(extractUri(artist.uri).id)
 
     if (!artist) {
         return <div>&nbsp;</div>
@@ -62,7 +47,7 @@ export default async function HomeHero() {
             <div
                 className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
                 style={{
-                    backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage?.color || "#000000"}, ${artistInfo?.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
+                    backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage?.color || "#000000"}, ${artistInfo?.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.visuals.avatarImage.sources)?.url})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -70,16 +55,15 @@ export default async function HomeHero() {
                 <div className="flex w-full items-end justify-between">
                     <div>
                         <h1 className="text-7xl font-bold drop-shadow-lg">
-                            {artist.name}
+                            {artist.profile.name}
                         </h1>
-                        <div className="mt-4 flex gap-3 text-xl capitalize">
-                            {limitArray(artist.genres, 3).map((genre) => (
-                                <Badge key={genre}>{genre}</Badge>
-                            ))}
+                        <div className="mt-4 text-xl">
+                            {formatNumber(artistInfo.stats.monthlyListeners)}{" "}
+                            Monthly Listeners
                         </div>
                     </div>
                     <div>
-                        <Link href={`/app/artist/${artist.id}`}>
+                        <Link href={`/app/artist/${extractUri(artist.uri).id}`}>
                             <Button className="flex items-center gap-3 rounded-full">
                                 Explore Tracks <ArrowRight size={22} />
                             </Button>

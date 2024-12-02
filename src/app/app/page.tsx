@@ -8,6 +8,7 @@ import RecentlyPlayed from "@/components/Explore/RecentlyPlayed"
 import { Suspense } from "react"
 import HomeHeroLoader from "@/components/Explore/HomeHeroLoader"
 import TrackCarouselLoader from "@/components/Track/TrackCarouselLoader"
+import PopularArtists from "@/components/Explore/PopularArtists"
 
 export const revalidate = 10
 
@@ -18,7 +19,7 @@ export default async function Home() {
                 <HomeHero />
             </Suspense>
             <Suspense fallback={<TrackCarouselLoader />}>
-                <RecommendedTracks />
+                <PopularArtists />
             </Suspense>
             <Suspense fallback={<TrackCarouselLoader />}>
                 <FeaturedPlaylist id="37i9dQZF1DX5I05jXm1F2M" />

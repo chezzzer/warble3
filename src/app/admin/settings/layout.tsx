@@ -19,6 +19,10 @@ export default function SettingsLayout({
             name: "Lyrics",
             href: "/admin/settings/lyrics",
         },
+        {
+            name: "Home Layout",
+            href: "/admin/settings/home-layout",
+        },
     ]
 
     const pathname = usePathname()
