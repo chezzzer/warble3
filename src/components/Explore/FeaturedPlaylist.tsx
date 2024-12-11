@@ -15,8 +15,8 @@ const getFeaturedPlaylistCache = unstable_cache(
             return null
         }
     },
-    ["homeArtist"],
-    { tags: ["homeArtist"] }
+    ["featuredPlaylist"],
+    { tags: ["featuredPlaylist"] }
 )
 
 export default async function FeaturedPlaylist({ id }: { id: string }) {

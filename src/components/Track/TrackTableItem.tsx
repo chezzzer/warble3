@@ -40,7 +40,7 @@ export default function TrackTableItem({
                             <p className="text-md font-semibold">
                                 {track.name}
                             </p>
-                            <div className="text-sm opacity-75">
+                            <div className="flex gap-1 text-sm opacity-75">
                                 {track.explicit && <TrackExplicit />}
                                 {track.artists.map((a) => a.name).join(", ")}
                             </div>
@@ -48,6 +48,7 @@ export default function TrackTableItem({
                     </div>
                 </TableCell>
                 <TableCell>{track.album.name}</TableCell>
+                <TableCell>{new Date(track.album.release_date).getFullYear()}</TableCell>
                 <TableCell className="text-right">
                     {secondsToTime(track.duration_ms / 1000)}
                 </TableCell>

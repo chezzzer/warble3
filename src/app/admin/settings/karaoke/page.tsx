@@ -20,7 +20,7 @@ export default async function KaraokePage() {
                         <p>Set the volume while playing a karaoke request.</p>
                         <RangeSetting
                             name="lyrics.karaoke_volume"
-                            initalValue={
+                            initialValue={
                                 findSetting("lyrics.karaoke_volume")
                                     ? Number.parseInt(
                                           findSetting("lyrics.karaoke_volume")
@@ -40,7 +40,7 @@ export default async function KaraokePage() {
                         </p>
                         <RangeSetting
                             name="lyrics.volume"
-                            initalValue={
+                            initialValue={
                                 findSetting("lyrics.volume")
                                     ? Number.parseInt(
                                           findSetting("lyrics.volume")?.value

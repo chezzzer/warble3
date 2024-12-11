@@ -33,8 +33,15 @@ function consolidateLyricType(
     }))
 }
 
-export async function getLyricsFallback(isrc: string) {
+export async function getLyricsFallback(
+    isrc: string,
+    preferredType: string | null = null
+) {
     try {
+        if (preferredType === musixmatch.LYRIC_TYPES.SUBTITLES) {
+            throw new Error("Preferred type is subtitles")
+        }
+
         const richsync = await getRichsyncLyrics(isrc)
         if (!richsync.richsync_body) {
             throw new Error("No richsync body found")
@@ -44,7 +51,7 @@ export async function getLyricsFallback(isrc: string) {
         console.log("Falling back to subtitles")
         const subtitle = await getSubtitleLyrics(isrc)
         if (!subtitle.subtitle_body) {
-            throw new Error("No richsync body found")
+            throw new Error("No subtitle body found")
         }
         return consolidateLyricType(subtitle.subtitle_body)
     }
@@ -66,7 +73,7 @@ export async function getRichsyncLyrics(
 ): Promise<MusixmatchLyrics> {
     const cacheKey = lyricsRedisCache.generateKey(
         isrc,
-        musixmatch.LYRIC_TYPES.SUBTITLES
+        musixmatch.LYRIC_TYPES.RICHSYNC
     )
     const cachedLyrics = await lyricsRedisCache.get(cacheKey)
 

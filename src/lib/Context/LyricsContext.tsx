@@ -2,7 +2,6 @@
 
 import { api } from "@/trpc/react"
 import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
-import { MusixmatchRichsync } from "musixmatch-richsync"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import type { PropsWithChildren } from "react"
 import type { Progress } from "@/lib/Context/SpotifyContext"

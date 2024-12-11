@@ -14,14 +14,18 @@ import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
 import musixmatch from "@/lib/Lyrics/LyricsProvider"
 import { z } from "zod"
 import getLyricsInfo from "@/lib/Lyrics/LyricsInfo"
+import { db } from "@/server/db"
+import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 
 export const lyricsRouter = createTRPCRouter({
-    getLyricInfo: publicProcedure
-        .input(z.object({ isrc: z.string() }))
+    getLyricInfo: publicProcedure.query(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        .query(async ({ input }) => {
-            return await getLyricsInfo(input.isrc)
-        }),
+        const context = await spotify.player.getPlaybackState()
+        const track = context.item as Track
+
+        return await getLyricsInfo(track.external_ids.isrc)
+    }),
 
     subscribe: publicProcedure.subscription(async () => {
         return observable<
@@ -29,6 +33,10 @@ export const lyricsRouter = createTRPCRouter({
             | LyricEvent<Progress | null>
             | LyricEvent<LyricLine[] | null>
         >((emit) => {
+            let progress_cache = 0
+            let sync_cache = 0
+            let richsync_enabled_cache = true
+
             const context = SpotifyContext.make()
 
             const sendContext = (context: PlaybackState | null) => {
@@ -38,13 +46,12 @@ export const lyricsRouter = createTRPCRouter({
                 })
             }
 
-            let progress_cache = 0
             const sendProgress = (progress_ms: number) => {
                 if (progress_cache !== progress_ms) {
                     progress_cache = progress_ms
                     emit.next({
                         name: "progress",
-                        data: progress_ms,
+                        data: progress_ms + sync_cache,
                     })
                 }
             }
@@ -63,7 +70,12 @@ export const lyricsRouter = createTRPCRouter({
                 try {
                     emit.next({
                         name: "lyrics",
-                        data: await getLyricsFallback(track.external_ids.isrc),
+                        data: await getLyricsFallback(
+                            track.external_ids.isrc,
+                            richsync_enabled_cache
+                                ? null
+                                : musixmatch.LYRIC_TYPES.SUBTITLES
+                        ),
                     })
                 } catch (e) {
                     console.error("Lyrics Error", e)
@@ -74,13 +86,46 @@ export const lyricsRouter = createTRPCRouter({
                 }
             }
 
+            const updateSettings = () => {
+                db.settings
+                    .findFirst({
+                        where: {
+                            name: "lyrics.karaoke_sync",
+                        },
+                    })
+                    .then(async (setting) => {
+                        if (!setting) return
+                        sync_cache = Number.parseInt(setting.value)
+                    })
+
+                db.settings
+                    .findFirst({
+                        where: {
+                            name: "lyrics.richsync_enabled",
+                        },
+                    })
+                    .then(async (setting) => {
+                        if (!setting) return
+                        if (
+                            richsync_enabled_cache !==
+                            (setting.value === "true")
+                        ) {
+                            richsync_enabled_cache = setting.value === "true"
+                            sendLyrics(context.getContext())
+                        }
+                    })
+            }
+
             context.events.on("track", sendLyrics)
             context.events.on("progress", sendProgress)
             context.events.on("change", sendContext)
 
             const interval = context.startTracking(100)
+            const settingsInterval = setInterval(updateSettings, 1000)
+            updateSettings()
             return () => {
                 clearInterval(interval)
+                clearInterval(settingsInterval)
                 context.events.off("track", sendLyrics)
                 context.events.off("change", sendContext)
                 context.events.off("progress", sendProgress)

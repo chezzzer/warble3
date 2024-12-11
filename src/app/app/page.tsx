@@ -9,31 +9,74 @@ import { Suspense } from "react"
 import HomeHeroLoader from "@/components/Explore/HomeHeroLoader"
 import TrackCarouselLoader from "@/components/Track/TrackCarouselLoader"
 import PopularArtists from "@/components/Explore/PopularArtists"
+import { db } from "@/server/db"
+import { unstable_cache } from "next/cache"
+import NewReleases from "@/components/Explore/NewReleases"
+import PopularReleases from "@/components/Explore/PopularReleases"
 
 export const revalidate = 10
 
+const getLayoutCache = unstable_cache(
+    async () => {
+        const layouts = await db.layout.findMany({
+            where: {
+                name: "home",
+            },
+        })
+
+        return layouts
+    },
+    ["homeLayout"],
+    { tags: ["homeLayout"] }
+)
+
 export default async function Home() {
-    return (
-        <>
-            <Suspense fallback={<HomeHeroLoader />}>
-                <HomeHero />
-            </Suspense>
-            <Suspense fallback={<TrackCarouselLoader />}>
-                <PopularArtists />
-            </Suspense>
-            <Suspense fallback={<TrackCarouselLoader />}>
-                <FeaturedPlaylist id="37i9dQZF1DX5I05jXm1F2M" />
-            </Suspense>
-            <Suspense fallback={<TrackCarouselLoader />}>
-                <FeaturedPlaylist id="37i9dQZF1EIfFu5aIsgmPg" />
-            </Suspense>
-            <Suspense fallback={<TrackCarouselLoader />}>
-                <FeaturedPlaylist id="37i9dQZF1DWY5Nosj13GLt" />
-            </Suspense>
-            <Suspense fallback={<TrackCarouselLoader />}>
-                <FeaturedPlaylist id="37i9dQZF1DX4Cwn7U4GsKm" />
-            </Suspense>
-            <RecentlyPlayed />
-        </>
-    )
+    const layout = await getLayoutCache()
+
+    return layout.map((layout) => {
+        if (layout.row_type === "playlist") {
+            const data = JSON.parse(layout.row_data)
+            return (
+                <Suspense fallback={<TrackCarouselLoader />}>
+                    <FeaturedPlaylist id={data.playlist_id} />
+                </Suspense>
+            )
+        }
+
+        if (layout.row_type === "popular-artists") {
+            return (
+                <Suspense fallback={<TrackCarouselLoader />}>
+                    <PopularArtists />
+                </Suspense>
+            )
+        }
+
+        if (layout.row_type === "recently-played") {
+            return <RecentlyPlayed />
+        }
+
+        if (layout.row_type === "random-artist") {
+            return (
+                <Suspense fallback={<HomeHeroLoader />}>
+                    <HomeHero />
+                </Suspense>
+            )
+        }
+
+        if (layout.row_type === "new-releases") {
+            return (
+                <Suspense fallback={<TrackCarouselLoader />}>
+                    <NewReleases />
+                </Suspense>
+            )
+        }
+
+        if (layout.row_type === "popular-releases") {
+            return (
+                <Suspense fallback={<TrackCarouselLoader />}>
+                    <PopularReleases />
+                </Suspense>
+            )
+        }
+    })
 }

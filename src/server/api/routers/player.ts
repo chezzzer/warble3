@@ -1,4 +1,8 @@
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
+import {
+    authProcedure,
+    createTRPCRouter,
+    publicProcedure,
+} from "@/server/api/trpc"
 import { observable } from "@trpc/server/observable"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { PlaybackState, SpotifyApi, Track } from "@spotify/web-api-ts-sdk"
@@ -57,5 +61,45 @@ export const playerRouter = createTRPCRouter({
                 context.events.off("progress", sendProgress)
             }
         })
+    }),
+
+    playPause: authProcedure.mutation(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        const context = await spotify.player.getPlaybackState()
+        if (context.device?.is_active) {
+            if (context.is_playing) {
+                await spotify.player.pausePlayback(context.device.id)
+            } else {
+                await spotify.player.startResumePlayback(context.device.id)
+            }
+        }
+    }),
+
+    next: authProcedure.mutation(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        const context = await spotify.player.getPlaybackState()
+        if (context.device?.is_active) {
+            await spotify.player.skipToNext(context.device.id)
+        }
+    }),
+
+    previous: authProcedure.mutation(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        const context = await spotify.player.getPlaybackState()
+        if (context.device?.is_active) {
+            await spotify.player.skipToPrevious(context.device.id)
+        }
+    }),
+
+    restart: authProcedure.mutation(async () => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        const context = await spotify.player.getPlaybackState()
+        if (context.device?.is_active) {
+            await spotify.player.seekToPosition(0, context.device.id)
+        }
     }),
 })

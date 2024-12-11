@@ -7,7 +7,6 @@ import {
     SimplifiedAlbum,
     Track,
 } from "@spotify/web-api-ts-sdk"
-import SearchCategories from "./SearchCategories"
 import { useSearch } from "@/lib/Context/SearchContext"
 import SpinnerSkeleton from "../Misc/SpinnerSkeleton"
 import AlbumCarousel from "../Album/AlbumCarousel"
@@ -15,11 +14,7 @@ import TrackCarousel from "../Track/TrackCarousel"
 import ArtistCarousel from "../Artist/ArtistCarousel"
 import PlaylistCarousel from "../Playlist/PlaylistCarousel"
 
-export default function SearchResults({
-    categories,
-}: {
-    categories: Category[]
-}) {
+export default function SearchResults() {
     const { items, isLoading } = useSearch()
 
     if (isLoading) {
@@ -27,11 +22,7 @@ export default function SearchResults({
     }
 
     if (!items) {
-        return (
-            <div className="p-5">
-                <SearchCategories categories={categories} />
-            </div>
-        )
+        return <div className="h-[400px]"></div>
     }
 
     return (

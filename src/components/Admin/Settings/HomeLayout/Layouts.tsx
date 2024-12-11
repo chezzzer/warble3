@@ -1,6 +1,6 @@
 import { db } from "@/server/db"
 import Layout from "./LayoutRow"
-import LayoutList from "./LayoutList"
+import LayoutTable from "./LayoutTable"
 
 export default async function Layouts() {
     const layouts = await db.layout.findMany({
@@ -9,5 +9,5 @@ export default async function Layouts() {
         },
     })
 
-    return <LayoutList layouts={layouts} />
+    return <LayoutTable initialLayouts={layouts} />
 }

@@ -56,5 +56,19 @@ export default async function setVolume() {
                 )
             }
         }
+
+        // Reset sync
+        await db.settings.upsert({
+            where: {
+                name: "lyrics.karaoke_sync",
+            },
+            update: {
+                value: "0",
+            },
+            create: {
+                name: "lyrics.karaoke_sync",
+                value: "0",
+            },
+        })
     }
 }

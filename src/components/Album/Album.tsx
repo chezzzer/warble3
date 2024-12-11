@@ -21,9 +21,11 @@ export default function Album({ album }: { album: SimplifiedAlbum }) {
                         <p className="text-md overflow-hidden whitespace-nowrap font-semibold">
                             {album.name}
                         </p>
-                        <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-400">
-                            {new Date(album.release_date).getFullYear()}{" "}
-                            &middot; {album.album_type}
+                        <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-500 dark:text-gray-400">
+                            {album.artists?.map((a) => a.name).join(", ") ||
+                                "Album"}{" "}
+                            &middot;{" "}
+                            {new Date(album.release_date).getFullYear()}
                         </p>
                     </CardContent>
                 </Card>

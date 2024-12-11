@@ -1,6 +1,5 @@
 import "@/styles/globals.css"
 
-import { GeistSans } from "geist/font/sans"
 import { type Metadata } from "next"
 
 import { TRPCReactProvider } from "@/trpc/react"
@@ -18,11 +17,7 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html
-            lang="en"
-            className={`scrollbar-hide ${GeistSans.variable}`}
-            suppressHydrationWarning
-        >
+        <html lang="en" className={`scrollbar-hide`} suppressHydrationWarning>
             <body className="overflow-x-hidden bg-slate-900">
                 <ThemeProvider
                     attribute="class"

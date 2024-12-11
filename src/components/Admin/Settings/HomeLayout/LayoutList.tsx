@@ -1,19 +1,17 @@
 "use client"
 
-import { HomeLayoutProvider } from "@/lib/Context/HomeLayoutContext"
-import type { Layout } from "@prisma/client"
+import { useHomeLayout } from "@/lib/Context/HomeLayoutContext"
 import LayoutRow from "./LayoutRow"
-import AddRow from "./AddRow"
+import { sortByKey } from "@/lib/utils"
 
-export default function LayoutList({ layouts }: { layouts: Layout[] }) {
+export default function LayoutList() {
+    const { layouts } = useHomeLayout()
+
     return (
-        <HomeLayoutProvider layouts={layouts}>
-            <div className="flex flex-col gap-4">
-                {layouts.map((layout) => (
-                    <LayoutRow layout={layout} />
-                ))}
-                <AddRow />
-            </div>
-        </HomeLayoutProvider>
+        <div className="flex flex-col gap-4">
+            {sortByKey(layouts, "position").map((layout, i) => (
+                <LayoutRow key={i} id={i} layout={layout} />
+            ))}
+        </div>
     )
 }

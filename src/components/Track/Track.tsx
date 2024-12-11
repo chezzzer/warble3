@@ -27,7 +27,7 @@ export default function Track({ track }: { track: Track }) {
                     <p className="text-md overflow-hidden whitespace-nowrap font-semibold">
                         {track.name}
                     </p>
-                    <p className="overflow-hidden whitespace-nowrap text-sm text-gray-400">
+                    <p className="overflow-hidden whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {track.explicit && <TrackExplicit />}{" "}
                         {track.artists.map((a) => a.name).join(", ")}
                     </p>

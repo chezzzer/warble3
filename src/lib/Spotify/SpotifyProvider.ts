@@ -1,6 +1,12 @@
 import { env } from "@/env"
 import { db } from "@/server/db"
-import { AccessToken, SpotifyApi } from "@spotify/web-api-ts-sdk"
+import {
+    AccessToken,
+    ICachable,
+    LocalStorageCachingStrategy,
+    SpotifyApi,
+} from "@spotify/web-api-ts-sdk"
+import { redis } from "../Redis/RedisClient"
 
 export class SpotifyProvider {
     private static spotify: SpotifyApi | undefined
@@ -135,4 +141,3 @@ export class SpotifyProvider {
         })
     }
 }
-

@@ -1,6 +1,5 @@
 "use client"
 
-import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { Input } from "../ui/input"
 import { useSearch } from "@/lib/Context/SearchContext"
 import { useEffect, useMemo } from "react"

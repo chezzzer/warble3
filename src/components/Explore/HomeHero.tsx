@@ -1,29 +1,22 @@
 import { Badge } from "../ui/badge"
-import { formatNumber, limitArray } from "@/lib/utils"
+import { limitArray } from "@/lib/utils"
 import { Button } from "../ui/button"
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr"
-import { cache } from "react"
-import { api } from "@/trpc/server"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
-import getExtraArtistInfo, {
-    ArtistInfo,
-} from "@/lib/Spotify/SpotifyExtraArtistInfo"
-import { Artist } from "@spotify/web-api-ts-sdk"
+import getExtraArtistInfo from "@/lib/Spotify/SpotifyExtraArtistInfo"
 import { unstable_cache } from "next/cache"
-import { readFile, writeFile } from "fs/promises"
 import Link from "next/link"
 import { extractUri, getLargestImage } from "@/lib/Spotify/SpotifyUtils"
-import {
-    getPopularArtists,
-    getRandomPopularArtist,
-} from "@/lib/Spotify/SpotifyPopularArtists"
+import { getRandomPopularArtist } from "@/lib/Spotify/SpotifyPopularArtists"
 
 const getArtistCache = unstable_cache(
-    async () => {
-        return await getRandomPopularArtist()
+    async (id: string) => {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        return await spotify.artists.get(id)
     },
-    ["artistCache"],
-    { tags: ["artistCache"] }
+    ["artistInfoCache"],
+    { tags: ["artistInfoCache"] }
 )
 
 const getArtistInfoCache = unstable_cache(
@@ -35,8 +28,12 @@ const getArtistInfoCache = unstable_cache(
 )
 
 export default async function HomeHero() {
-    const artist = await getArtistCache()
-    const artistInfo = await getArtistInfoCache(extractUri(artist.uri).id)
+    const artistId = extractUri((await getRandomPopularArtist()).uri).id
+
+    const [artist, artistInfo] = await Promise.all([
+        getArtistCache(artistId),
+        getArtistInfoCache(artistId),
+    ])
 
     if (!artist) {
         return <div>&nbsp;</div>
@@ -47,7 +44,7 @@ export default async function HomeHero() {
             <div
                 className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
                 style={{
-                    backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage?.color || "#000000"}, ${artistInfo?.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.visuals.avatarImage.sources)?.url})`,
+                    backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage?.color || "#000000"}, ${artistInfo?.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
@@ -55,15 +52,16 @@ export default async function HomeHero() {
                 <div className="flex w-full items-end justify-between">
                     <div>
                         <h1 className="text-7xl font-bold drop-shadow-lg">
-                            {artist.profile.name}
+                            {artist.name}
                         </h1>
-                        <div className="mt-4 text-xl">
-                            {formatNumber(artistInfo.stats.monthlyListeners)}{" "}
-                            Monthly Listeners
+                        <div className="mt-4 flex gap-3 text-xl capitalize">
+                            {limitArray(artist.genres, 3).map((genre) => (
+                                <Badge key={genre}>{genre}</Badge>
+                            ))}
                         </div>
                     </div>
                     <div>
-                        <Link href={`/app/artist/${extractUri(artist.uri).id}`}>
+                        <Link href={`/app/artist/${artist.id}`}>
                             <Button className="flex items-center gap-3 rounded-full">
                                 Explore Tracks <ArrowRight size={22} />
                             </Button>

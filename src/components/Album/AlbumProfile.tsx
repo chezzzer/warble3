@@ -30,7 +30,7 @@ export async function AlbumProfile({ albumId }: { albumId: string }) {
                 <TrackTable tracks={items as Track[]} />
             </div>
             {artistAlbums.total > 0 && (
-                <div className="px-5">
+                <div>
                     <AlbumArtist albums={artistAlbums.items} />
                 </div>
             )}

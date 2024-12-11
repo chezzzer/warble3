@@ -18,6 +18,7 @@ export default function TrackTable({ tracks }: { tracks: Track[] }) {
                     <TableHead className="w-10">#</TableHead>
                     <TableHead>Title</TableHead>
                     <TableHead>Album</TableHead>
+                    <TableHead>Released</TableHead>
                     <TableHead className="w-10">Duration</TableHead>
                 </TableRow>
             </TableHeader>

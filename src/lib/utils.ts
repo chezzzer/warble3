@@ -12,6 +12,14 @@ export function limitArray<T>(arr: T[], limit: number) {
     return arr.slice(0, limit)
 }
 
+export function sortByKey(array: any[], key: string | number) {
+    return array.sort(function (a, b) {
+        var x = a[key]
+        var y = b[key]
+        return x < y ? -1 : x > y ? 1 : 0
+    })
+}
+
 export function shuffleArray<T>(arr: T[]) {
     return arr.sort(() => Math.random() - 0.5)
 }

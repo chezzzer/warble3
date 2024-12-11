@@ -33,7 +33,7 @@ export default function QueueItemAdminControls({
 }
 
 function RemoveButton({ request }: { request: Request }) {
-    const { isPending, mutate } = api.admin.removeRequest.useMutation()
+    const { isPending, mutate } = api.request.removeRequest.useMutation()
 
     if (isPending) {
         return <Spinner size={19} />
@@ -53,7 +53,7 @@ function EditButton({ request }: { request: Request }) {
     const [name, setName] = useState<string>(request.name)
     const [spotifyId, setSpotifyId] = useState<string>(request.spotifyId)
     const { isPending, mutateAsync, error } =
-        api.admin.editRequestSinger.useMutation()
+        api.request.editRequestSinger.useMutation()
 
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()

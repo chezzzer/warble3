@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import {
     Dialog,
     DialogContent,
@@ -58,7 +58,9 @@ export default function AddDialog({
         mutation.reset()
     }, [track])
 
-    const queueIndex = queue.findIndex((q) => q.spotifyId === track.id)
+    const queueIndex = useMemo(() => {
+        return queue.findIndex((q) => q.spotifyId === track.id)
+    }, [open])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

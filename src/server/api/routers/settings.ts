@@ -4,6 +4,7 @@ import { db } from "@/server/db"
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 import { Layout } from "@prisma/client"
+import { revalidateTag } from "next/cache"
 
 export const settingsRouter = createTRPCRouter({
     set: authProcedure
@@ -33,6 +34,32 @@ export const settingsRouter = createTRPCRouter({
             }
         }),
 
+    get: authProcedure
+        .input(
+            z.object({
+                name: z.string(),
+            })
+        )
+        .query(async ({ input }) => {
+            const setting = await db.settings.findFirst({
+                where: {
+                    name: input.name,
+                },
+            })
+
+            if (!setting) {
+                throw new TRPCError({
+                    code: "NOT_FOUND",
+                    message: "Setting not found",
+                })
+            }
+
+            return {
+                name: input.name,
+                value: setting.value,
+            }
+        }),
+
     setLayout: authProcedure
         .input(
             z.object({
@@ -52,5 +79,7 @@ export const settingsRouter = createTRPCRouter({
             await db.layout.createMany({
                 data: layouts,
             })
+
+            revalidateTag("homeLayout")
         }),
 })

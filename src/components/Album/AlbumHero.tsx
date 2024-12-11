@@ -18,7 +18,7 @@ export default function AlbumHero({
     return (
         <>
             <div
-                className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
+                className="dark relative flex h-[500px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${color.colorDark}, ${color.colorLight})`,
                 }}
@@ -29,9 +29,9 @@ export default function AlbumHero({
                             <img
                                 alt={album.name}
                                 src={getLargestImage(album.images)?.url}
-                                className="aspect-square rounded-full object-cover drop-shadow-2xl"
-                                width={150}
-                                height={150}
+                                className="aspect-square rounded-lg object-cover drop-shadow-2xl"
+                                width={300}
+                                height={300}
                             />
                         </div>
                         <div className="flex flex-col gap-3">

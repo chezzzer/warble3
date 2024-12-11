@@ -22,7 +22,7 @@ export default function Artist({ artist }: { artist: Artist }) {
                         <p className="text-md overflow-hidden whitespace-nowrap font-semibold">
                             {artist.name}
                         </p>
-                        <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-400">
+                        <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-500 dark:text-gray-400">
                             Artist
                         </p>
                     </CardContent>

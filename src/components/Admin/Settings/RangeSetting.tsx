@@ -11,16 +11,16 @@ import useSettings from "@/hooks/useSettings"
 
 export default function RangeSetting({
     name,
-    initalValue,
+    initialValue,
     min,
     max,
 }: {
     name: string
-    initalValue: number
+    initialValue: number
     min: number
     max: number
 }) {
-    const [value, setValue] = useState<number>(initalValue)
+    const [value, setValue] = useState<number>(initialValue)
 
     const { isPending, currentValue } = useSettings(name, value.toString())
 

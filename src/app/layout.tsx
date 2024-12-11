@@ -14,6 +14,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <head>
+                <link
+                    rel="stylesheet"
+                    href="https://use.typekit.net/ovu4wou.css"
+                />
+            </head>
             <body>{children}</body>
         </html>
     )

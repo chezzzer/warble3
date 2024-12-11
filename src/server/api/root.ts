@@ -3,7 +3,6 @@ import { requestRouter } from "./routers/request"
 import { playerRouter } from "./routers/player"
 import { spotifyRouter } from "./routers/spotify"
 import { lyricsRouter } from "./routers/lyrics"
-import { adminRouter } from "./routers/admin"
 import { settingsRouter } from "./routers/settings"
 
 /**
@@ -17,7 +16,6 @@ export const appRouter = createTRPCRouter({
     player: playerRouter,
     spotify: spotifyRouter,
     lyrics: lyricsRouter,
-    admin: adminRouter,
 })
 
 // export type definition of API

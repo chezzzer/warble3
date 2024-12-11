@@ -10,6 +10,22 @@ export default function useSettings(name: string, value: string) {
 
     const { mutateAsync, isPending } = api.settings.set.useMutation()
 
+    const { data, refetch } = api.settings.get.useQuery(
+        {
+            name,
+        },
+        {
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+            refetchInterval: 10000,
+        }
+    )
+
+    useEffect(() => {
+        if (!data || !data.value) return
+        setCurrentValue(data.value)
+    }, [data])
+
     useEffect(() => {
         if (debouncedValue === currentValue) return
 
@@ -50,6 +66,7 @@ export default function useSettings(name: string, value: string) {
     }, [debouncedValue])
 
     return {
+        refetch,
         isPending,
         currentValue,
     }
