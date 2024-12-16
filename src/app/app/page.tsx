@@ -33,11 +33,11 @@ const getLayoutCache = unstable_cache(
 export default async function Home() {
     const layout = await getLayoutCache()
 
-    return layout.map((layout) => {
+    return layout.map((layout, i) => {
         if (layout.row_type === "playlist") {
             const data = JSON.parse(layout.row_data)
             return (
-                <Suspense fallback={<TrackCarouselLoader />}>
+                <Suspense key={i} fallback={<TrackCarouselLoader />}>
                     <FeaturedPlaylist id={data.playlist_id} />
                 </Suspense>
             )
@@ -45,19 +45,19 @@ export default async function Home() {
 
         if (layout.row_type === "popular-artists") {
             return (
-                <Suspense fallback={<TrackCarouselLoader />}>
+                <Suspense key={i} fallback={<TrackCarouselLoader />}>
                     <PopularArtists />
                 </Suspense>
             )
         }
 
         if (layout.row_type === "recently-played") {
-            return <RecentlyPlayed />
+            return <RecentlyPlayed key={i} />
         }
 
         if (layout.row_type === "random-artist") {
             return (
-                <Suspense fallback={<HomeHeroLoader />}>
+                <Suspense key={i} fallback={<HomeHeroLoader />}>
                     <HomeHero />
                 </Suspense>
             )
@@ -65,7 +65,7 @@ export default async function Home() {
 
         if (layout.row_type === "new-releases") {
             return (
-                <Suspense fallback={<TrackCarouselLoader />}>
+                <Suspense key={i} fallback={<TrackCarouselLoader />}>
                     <NewReleases />
                 </Suspense>
             )
@@ -73,7 +73,7 @@ export default async function Home() {
 
         if (layout.row_type === "popular-releases") {
             return (
-                <Suspense fallback={<TrackCarouselLoader />}>
+                <Suspense key={i} fallback={<TrackCarouselLoader />}>
                     <PopularReleases />
                 </Suspense>
             )

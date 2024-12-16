@@ -36,7 +36,7 @@ export default async function RootLayout({
             className={`${GeistSans.variable}`}
             suppressHydrationWarning
         >
-            <body className="overflow-x-hidden bg-slate-900 text-white">
+            <body className="overflow-x-hidden bg-slate-900 pb-[100px] text-white">
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"

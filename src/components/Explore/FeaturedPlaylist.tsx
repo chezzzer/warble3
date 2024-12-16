@@ -11,7 +11,8 @@ const getFeaturedPlaylistCache = unstable_cache(
             const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
             return await spotify.playlists.getPlaylist(id)
-        } catch {
+        } catch (e) {
+            console.error(e)
             return null
         }
     },

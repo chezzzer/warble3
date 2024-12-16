@@ -42,8 +42,8 @@ export default function SettingsLayout({
                 <div className="md:w-[300px]">
                     <Card>
                         <CardContent>
-                            <SidebarProvider>
-                                <SidebarMenu className="my-5">
+                            <SidebarProvider className="my-5 min-h-0">
+                                <SidebarMenu>
                                     <SidebarMenuItem>
                                         <SidebarMenuButton
                                             asChild

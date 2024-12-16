@@ -39,7 +39,8 @@ export default async function RecommendedTracks() {
                 <TrackCarousel tracks={recommendations.tracks} />
             </>
         )
-    } catch {
+    } catch (e) {
+        console.error(e)
         return <InLineError error={<>Unable to load recommendations</>} />
     }
 }

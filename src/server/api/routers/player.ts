@@ -64,42 +64,59 @@ export const playerRouter = createTRPCRouter({
     }),
 
     playPause: authProcedure.mutation(async () => {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+        try {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        const context = await spotify.player.getPlaybackState()
-        if (context.device?.is_active) {
-            if (context.is_playing) {
-                await spotify.player.pausePlayback(context.device.id)
-            } else {
-                await spotify.player.startResumePlayback(context.device.id)
+            const context = await spotify.player.getPlaybackState()
+            if (context.device?.is_active) {
+                if (context.is_playing) {
+                    await spotify.player.pausePlayback(context.device.id)
+                } else {
+                    await spotify.player.startResumePlayback(context.device.id)
+                }
             }
-        }
+        } catch {}
     }),
 
     next: authProcedure.mutation(async () => {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+        try {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        const context = await spotify.player.getPlaybackState()
-        if (context.device?.is_active) {
-            await spotify.player.skipToNext(context.device.id)
-        }
+            const context = await spotify.player.getPlaybackState()
+            if (context.device?.is_active) {
+                await spotify.player.skipToNext(context.device.id)
+            }
+        } catch {}
     }),
 
     previous: authProcedure.mutation(async () => {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+        try {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        const context = await spotify.player.getPlaybackState()
-        if (context.device?.is_active) {
-            await spotify.player.skipToPrevious(context.device.id)
-        }
+            const context = await spotify.player.getPlaybackState()
+            if (context.device?.is_active) {
+                await spotify.player.skipToPrevious(context.device.id)
+            }
+        } catch {}
     }),
 
-    restart: authProcedure.mutation(async () => {
-        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+    rewind: authProcedure.mutation(async () => {
+        try {
+            const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-        const context = await spotify.player.getPlaybackState()
-        if (context.device?.is_active) {
-            await spotify.player.seekToPosition(0, context.device.id)
-        }
+            const context = await spotify.player.getPlaybackState()
+            if (context.device?.is_active) {
+                await spotify.player.seekToPosition(0, context.device.id)
+            }
+        } catch {}
     }),
+
+    setVolume: authProcedure
+        .input(z.object({ volume: z.number() }))
+        .mutation(async ({ input }) => {
+            try {
+                const spotify = await SpotifyProvider.makeFromDatabaseCache()
+                await spotify.player.setPlaybackVolume(input.volume)
+            } catch {}
+        }),
 })

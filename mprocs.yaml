@@ -1,6 +1,7 @@
 procs:
     dev:
         shell: "bun run dev"
+        autostart: false
     track:
         shell: "bun run spotify:track"
     setup:

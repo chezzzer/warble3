@@ -56,34 +56,36 @@ export const lyricsRouter = createTRPCRouter({
                 }
             }
 
-            const sendLyrics = async (context: PlaybackState | null) => {
-                if (!context || !context.item) {
-                    emit.next({
-                        name: "lyrics",
-                        data: null,
-                    })
-                    return
-                }
+            const sendLyrics = (context: PlaybackState | null) => {
+                ;(async () => {
+                    if (!context || !context.item) {
+                        emit.next({
+                            name: "lyrics",
+                            data: null,
+                        })
+                        return
+                    }
 
-                const track = context.item as Track
+                    const track = context.item as Track
 
-                try {
-                    emit.next({
-                        name: "lyrics",
-                        data: await getLyricsFallback(
-                            track.external_ids.isrc,
-                            richsync_enabled_cache
-                                ? null
-                                : musixmatch.LYRIC_TYPES.SUBTITLES
-                        ),
-                    })
-                } catch (e) {
-                    console.error("Lyrics Error", e)
-                    emit.next({
-                        name: "lyrics",
-                        data: null,
-                    })
-                }
+                    try {
+                        emit.next({
+                            name: "lyrics",
+                            data: await getLyricsFallback(
+                                track.external_ids.isrc,
+                                richsync_enabled_cache
+                                    ? null
+                                    : musixmatch.LYRIC_TYPES.SUBTITLES
+                            ),
+                        })
+                    } catch (e) {
+                        console.error("Lyrics Error", e)
+                        emit.next({
+                            name: "lyrics",
+                            data: null,
+                        })
+                    }
+                })()
             }
 
             const updateSettings = () => {

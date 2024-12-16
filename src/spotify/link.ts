@@ -24,7 +24,14 @@ const start = async () => {
 
         await SpotifyProvider.replaceAccessToken(data)
 
-        return `Linked to ${profile.display_name}`
+        await reply.send(`Linked to ${profile.display_name}`)
+
+        setTimeout(() => {
+            fastify.close().then(() => {
+                console.log("Now run the app")
+                process.exit(0)
+            })
+        }, 1000)
     })
 
     await fastify.listen({ port: 3000 })
@@ -54,6 +61,11 @@ function openAuthURL() {
             redirect_uri: env.SPOTIFY_REDIRECT_URI,
             state: state,
         })
+
+    console.log(`
+Trying to auto-open Spotify login page...
+Click here to open it manually: ${authURL}
+        `)
 
     open(authURL)
 }

@@ -43,7 +43,9 @@ export default function Navbar() {
             <div className="fixed z-50 h-screen w-[80px] border-r-[1px] border-slate-300 bg-slate-100 dark:border-slate-800 dark:bg-slate-900">
                 <div className="flex h-full flex-col items-center justify-between gap-10 p-2 pt-5">
                     <div>
-                        <MicrophoneStage size={50} weight="duotone" />
+                        <Link href="/">
+                            <MicrophoneStage size={50} weight="duotone" />
+                        </Link>
                     </div>
                     <div className="flex w-full flex-col items-center gap-10">
                         {items.map((item) => (
