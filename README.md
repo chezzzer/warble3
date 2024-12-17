@@ -4,6 +4,13 @@ This is my third rendition of Warble, a Spotify karaoke app, using Musixmatch fo
 
 Don't expect this to be maintained, but feel free to learn and fork it. There's no license, so you can do whatever you want with it.
 
+![image](https://github.com/user-attachments/assets/515d9721-325a-4224-b35d-3fa335c60c8e)
+
+![image](https://github.com/user-attachments/assets/2e5d7097-7fad-4ed9-9478-731edecd50a4)
+
+![image](https://github.com/user-attachments/assets/47c352f7-9729-4b77-8fea-55694e03fdf2)
+
+
 ## Please note:
 
 This app is literally illegal if used in a production environment. I'm not responsible for any damages that may occur from using this app. The reason
