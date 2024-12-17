@@ -1,13 +1,5 @@
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { unstable_cache } from "next/cache"
-import Track from "../Track/Track"
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "../ui/carousel"
 import { readFile, writeFile } from "fs/promises"
 import TrackCarousel from "../Track/TrackCarousel"
 import InLineError from "../Misc/InLineError"

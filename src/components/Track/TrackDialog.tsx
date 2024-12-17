@@ -16,9 +16,10 @@ import TrackPreview from "./TrackPreview"
 import ArtistList from "../Artist/ArtistList"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 import TrackExplicit from "./TrackExplicit"
-import { useRef, useState } from "react"
 import useImageColor from "@/hooks/useImageColor"
-import { ThemeProvider } from "../ThemeProvider"
+import { api } from "@/trpc/react"
+import { useEffect } from "react"
+import Spinner from "../Misc/Spinner"
 
 export default function TrackDialog({
     track,
@@ -30,6 +31,19 @@ export default function TrackDialog({
     onOpenChange: (open: boolean) => void
 }) {
     const { color, onLoad, luminance } = useImageColor()
+
+    const { refetch, isFetched, data, isFetching } =
+        api.spotify.getPreviewUrl.useQuery(
+            { trackId: track.id },
+            {
+                enabled: false,
+            }
+        )
+
+    useEffect(() => {
+        if (isFetched || !open) return
+        refetch()
+    }, [open])
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -84,9 +98,12 @@ export default function TrackDialog({
                         </div>
                     </DialogHeader>
                     <div className="my-3 dark:text-white">
-                        {track.preview_url && (
-                            <TrackPreview color={color} track={track} />
+                        {isFetching && (
+                            <div className="flex min-h-[50px] items-center justify-center">
+                                <Spinner size={32} />
+                            </div>
                         )}
+                        {data && <TrackPreview color={color} url={data} />}
                     </div>
                     <AddDialog track={track} onAdd={() => onOpenChange(false)}>
                         <Button className="flex w-full items-center gap-2">

@@ -1,4 +1,3 @@
-import { Track } from "@spotify/web-api-ts-sdk"
 import {
     Dialog,
     DialogContent,
@@ -13,10 +12,10 @@ import { PauseCircle, Play, PlayCircle } from "@phosphor-icons/react"
 import WaveSurfer from "wavesurfer.js"
 
 export default function TrackPreview({
-    track,
+    url,
     color,
 }: {
-    track: Track
+    url: string
     color?: string
 }) {
     const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null)
@@ -56,7 +55,7 @@ export default function TrackPreview({
                     height={50}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
-                    url={track.preview_url}
+                    url={url}
                 />
             </div>
         </div>

@@ -6,6 +6,7 @@ import { Artist, MaxInt, Track } from "@spotify/web-api-ts-sdk"
 import getExtraArtistInfo, {
     ArtistInfo,
 } from "@/lib/Spotify/SpotifyExtraArtistInfo"
+import { getPreviewUrl } from "@/lib/Spotify/SpotifyPreviewUrl"
 
 export const spotifyRouter = createTRPCRouter({
     getHistory: publicProcedure
@@ -44,5 +45,13 @@ export const spotifyRouter = createTRPCRouter({
                 tracks: search.tracks.items,
                 playlists: search.playlists.items,
             }
+        }),
+
+    getPreviewUrl: publicProcedure
+        .input(z.object({ trackId: z.string() }))
+        .query(async ({ input }) => {
+            const url = await getPreviewUrl(input.trackId)
+
+            return url
         }),
 })

@@ -17,7 +17,7 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`scrollbar-hide cur`} suppressHydrationWarning>
+        <html lang="en" className={`scrollbar-hide cursor-none`} suppressHydrationWarning>
             <body className="overflow-x-hidden bg-slate-900">
                 <ThemeProvider
                     attribute="class"
