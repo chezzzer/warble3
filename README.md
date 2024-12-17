@@ -4,6 +4,13 @@ This is my third rendition of Warble, a Spotify karaoke app, using Musixmatch fo
 
 Don't expect this to be maintained, but feel free to learn and fork it. There's no license, so you can do whatever you want with it.
 
+![image](https://github.com/user-attachments/assets/515d9721-325a-4224-b35d-3fa335c60c8e)
+
+![image](https://github.com/user-attachments/assets/2e5d7097-7fad-4ed9-9478-731edecd50a4)
+
+![image](https://github.com/user-attachments/assets/47c352f7-9729-4b77-8fea-55694e03fdf2)
+
+
 ## Please note:
 
 This app is literally illegal if used in a production environment. I'm not responsible for any damages that may occur from using this app. The reason
@@ -27,7 +34,6 @@ bun run spotify:setup
 
 This will open a Spotify oauth page. It'll ask you to log in, and then give a confirmation code in the console.
 Alternatively you can put the authorization into the database in the SpotifyCredentials model.
-CTRL+C out of the link server when the confirm message is shown.
 
 Now to run the application, run these three commands in separate terminals.
 
@@ -39,7 +45,17 @@ docker-compose up -d
 
 This will start the NextJS dev server, the Spotify playback tracker, and the Redis server.
 
-For production, build the app and then run it with `bun run build && bun run start`.
+For production, build the app and then run it with `bun run build && bun run start`, then make sure redis and the spotify:track script is running.
+
+## Problems
+
+Obviously the whole illegal part of it isn't great, but here are some other infrastructure things I would redo differently:
+
+- The queue system isn't great with removing tracks. If the queue that warble stores doesn't match Spotify, things can get out of sync real quick. I would like to eventually use Spotify's queue endpoint to sync it up and stop any concurrency errors.
+- The realtime method I am using is EventSources, which are fine but aren't technically built for this kind of "always-open" architecture. If you try to open the admin view, the browser and the admin page, you will struggle to open anything else as Chrome has a limit on the number of open EventSources you can have, which is a global tab limit. Websockets would fit a lot better here since they do not have this problem, but implementing them with tRPC looks and sounds like a nightmare, but I would like to implement this at some stage.
+- The current NextJS version is out of date and I would like to try all the new fancy caching stuff in v15. I am also using a lot of `unstable_cache` which needs upgrading to the new cache scheme.
+- Having to run 3 scripts to do development isn't ideal, it would be nice to combine the NextJS server with the track server, but this involves maintenance I don't think I want.
+- There is no way to dockerize this app yet, making a Dockerfile would be nice.
 
 ## Technologies
 
