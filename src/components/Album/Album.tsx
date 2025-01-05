@@ -1,11 +1,11 @@
 "use client"
 
-import type { SimplifiedAlbum, Track } from "@spotify/web-api-ts-sdk"
+import type { Album, SimplifiedAlbum, Track } from "@spotify/web-api-ts-sdk"
 import { Card, CardContent, CardHeader } from "../ui/card"
 import Link from "next/link"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
-export default function Album({ album }: { album: SimplifiedAlbum }) {
+export default function Album({ album }: { album: SimplifiedAlbum | Album }) {
     return (
         <>
             <Link href={`/app/album/${album.id}`}>

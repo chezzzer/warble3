@@ -2,7 +2,7 @@
 
 import { Track } from "@spotify/web-api-ts-sdk"
 import { TableCell, TableRow } from "../ui/table"
-import { secondsToTime } from "@/lib/utils"
+import { formatNumber, secondsToTime } from "@/lib/utils"
 import TrackDialog from "./TrackDialog"
 import { useState } from "react"
 import { getSmallestImage } from "@/lib/Spotify/SpotifyUtils"
@@ -11,9 +11,11 @@ import TrackExplicit from "./TrackExplicit"
 export default function TrackTableItem({
     track,
     i,
+    playcount,
 }: {
     track: Track
     i?: number
+    playcount?: number
 }) {
     const [open, setOpen] = useState(false)
 
@@ -47,8 +49,15 @@ export default function TrackTableItem({
                         </div>
                     </div>
                 </TableCell>
-                <TableCell>{track.album.name}</TableCell>
-                <TableCell>{new Date(track.album.release_date).getFullYear()}</TableCell>
+                {playcount && <TableCell>{formatNumber(playcount)}</TableCell>}
+                <TableCell className="hidden md:table-cell">
+                    {track.album.name}
+                </TableCell>
+                {track.album.release_date && (
+                    <TableCell className="hidden md:table-cell">
+                        {new Date(track.album.release_date).getFullYear()}
+                    </TableCell>
+                )}
                 <TableCell className="text-right">
                     {secondsToTime(track.duration_ms / 1000)}
                 </TableCell>

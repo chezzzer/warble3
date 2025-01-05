@@ -9,22 +9,27 @@ import ArtistStats from "./ArtistStats"
 import ArtistAlbums from "./ArtistAlbums"
 import ArtistPopularAlbums from "./ArtistPopularAlbums"
 import InLineError from "../Misc/InLineError"
+import { Suspense } from "react"
+import SpinnerSkeleton from "../Misc/SpinnerSkeleton"
+import TrackTableSkeleton from "../Track/TracklTableSkeleton"
 
-export default async function ArtistPage({ artistId }: { artistId: string }) {
+export default async function ArtistProfile({
+    artistId,
+}: {
+    artistId: string
+}) {
     try {
         const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
         const [
             artist,
             artistInfo,
-            topTracks,
             albums,
             // relatedArtists,
             // similarTracks,
         ] = await Promise.all([
             spotify.artists.get(artistId),
             getExtraArtistInfo(artistId),
-            spotify.artists.topTracks(artistId, "NZ"),
             spotify.artists.albums(
                 artistId,
                 "album,single,appears_on,compilation"
@@ -41,11 +46,16 @@ export default async function ArtistPage({ artistId }: { artistId: string }) {
                 <div>
                     <ArtistHero artist={artist} artistInfo={artistInfo} />
                 </div>
-                <div className="flex gap-10 px-5">
+                <div className="flex flex-col gap-10 px-5 md:flex-row">
                     <div className="flex-1">
-                        <ArtistTopTracks tracks={topTracks.tracks} />
+                        <h1 className="mb-3 text-2xl opacity-75">Top Tracks</h1>
+                        <Suspense fallback={<TrackTableSkeleton />}>
+                            <ArtistTopTracks
+                                topTracks={artistInfo.discography.topTracks}
+                            />
+                        </Suspense>
                     </div>
-                    <div className="relative w-[400px]">
+                    <div className="relative md:w-[400px]">
                         <div className="flex flex-col gap-5">
                             {artistInfo?.profile?.pinnedItem && (
                                 <ArtistPinnedItem

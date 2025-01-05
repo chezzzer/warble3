@@ -31,7 +31,10 @@ export default function Playlist({
                             {playlist.name}
                         </p>
                         <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-400">
-                            Playlist &middot; {playlist.tracks.total} Tracks
+                            Playlist{" "}
+                            {playlist.tracks && (
+                                <>&middot; {playlist.tracks.total} Tracks</>
+                            )}
                         </p>
                     </CardContent>
                 </Card>

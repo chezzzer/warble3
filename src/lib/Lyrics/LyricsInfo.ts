@@ -9,14 +9,6 @@ export default async function getLyricsInfo(isrc: string) {
             }).toString()
     )
 
-    console.log(
-        "https://api.musixmatch.com/ws/1.1/track.get?" +
-            new URLSearchParams({
-                apikey: env.MUSIXMATCH_API_KEY,
-                track_isrc: isrc,
-            }).toString()
-    )
-
     const data = await res.json()
 
     return data.message?.body?.track! as MusixmatchInfo

@@ -1,5 +1,6 @@
 import ArtistList from "@/components/Artist/ArtistList"
 import Spinner from "@/components/Misc/Spinner"
+import CurrentTrack from "@/components/Player/CurrentTrack"
 import {
     HoverCard,
     HoverCardContent,
@@ -63,43 +64,7 @@ export default function NowPlaying() {
                         </div>
                     </HoverCardTrigger>
                     <HoverCardContent side="right" className="w-80">
-                        <div className="flex items-center gap-5">
-                            <div className="w-[80px]">
-                                <Link href={"/app/album/" + track.album.id}>
-                                    <img
-                                        src={
-                                            getSmallestImage(track.album.images)
-                                                ?.url
-                                        }
-                                        className="rounded-lg"
-                                        width={80}
-                                        height={80}
-                                        alt={track.name}
-                                    />
-                                    <div className="mt-1">
-                                        <img
-                                            alt={track.name}
-                                            src={`https://scannables.scdn.co/uri/plain/svg/020817/white/640/${track.uri}`}
-                                        />
-                                    </div>
-                                </Link>
-                            </div>
-                            <div className="flex-1">
-                                <h6 className="text-xs font-semibold">
-                                    NOW PLAYING
-                                </h6>
-                                <p className="text-md mt-1 font-extrabold leading-[16px]">
-                                    {track.name}
-                                </p>
-                                <p className="text-sm leading-[16px]">
-                                    <ArtistList artists={track.artists} />
-                                </p>
-                                <p className="mt-1 text-xs">
-                                    {secondsToTime(progress / 1000)} /{" "}
-                                    {secondsToTime(track.duration_ms / 1000)}
-                                </p>
-                            </div>
-                        </div>
+                        <CurrentTrack />
                     </HoverCardContent>
                 </HoverCard>
             )}

@@ -1,3 +1,5 @@
+"use client"
+
 import { useLyrics } from "@/lib/Context/LyricsContext"
 import {
     MusixmatchLyric,
@@ -7,8 +9,10 @@ import {
 import { useEffect } from "react"
 import LineCountdown from "./LineCountdown"
 import type { LyricLine } from "@/lib/Lyrics/LyricsCacheProvider"
+import useKeepAwake from "@/hooks/useKeepWake"
 
 export default function LyricList() {
+    useKeepAwake()
     const { lyrics, currentIndex } = useLyrics()
 
     useEffect(() => {

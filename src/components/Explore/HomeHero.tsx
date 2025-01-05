@@ -42,7 +42,7 @@ export default async function HomeHero() {
     return (
         <>
             <div
-                className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
+                className="dark relative flex h-[500px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${artistInfo?.visuals.headerImage?.color || "#000000"}, ${artistInfo?.visuals.headerImage?.color || "#000000"}00), url(${getLargestImage(artistInfo?.visuals.headerImage?.images)?.url || getLargestImage(artist.images)?.url})`,
                     backgroundSize: "cover",

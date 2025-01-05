@@ -26,7 +26,7 @@ function useProviderValue() {
     api.lyrics.subscribe.useSubscription(undefined, {
         onData: (event) => {
             if (event.name === "progress") {
-                setProgress((event.data as Progress) + 300)
+                setProgress(event.data as Progress)
                 return
             }
 

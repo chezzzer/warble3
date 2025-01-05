@@ -1,8 +1,10 @@
 import { Image } from "@spotify/web-api-ts-sdk"
 
-export function extractUri(uri: string): { type: string; id: string } {
+export type SpotifyType = "track" | "artist" | "album" | "playlist" | "user"
+
+export function extractUri(uri: string): { type: SpotifyType; id: string } {
     const [spotify, type, id] = uri.split(":")
-    return { type, id }
+    return { type: type as SpotifyType, id }
 }
 
 export function replaceSpotifyUriLinks(html: string): string {

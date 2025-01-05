@@ -17,8 +17,8 @@ try {
         }, 10_000)
         setInterval(() => {
             trackPlayback().then(() => {
-                setVolume().then(() => {
-                    removeQueue()
+                removeQueue().then(() => {
+                    setVolume()
                 })
             })
         }, 1000)

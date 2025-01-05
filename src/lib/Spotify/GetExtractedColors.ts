@@ -28,6 +28,7 @@ export default async function getExtractedColors(
                 cache: "force-cache",
             }
         )
+
         const { data } = JSON.parse(await albumRes.text())
 
         return data.extractedColors.map((color) => ({

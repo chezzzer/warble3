@@ -6,37 +6,14 @@ import { useEffect, useMemo } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
 export default function SearchHero() {
-    const { setSearch, search } = useSearch()
-
-    const router = useRouter()
-    const params = useSearchParams()
-
-    useEffect(() => {
-        router.replace(`?query=${search}`)
-    }, [search])
-
-    useEffect(() => {
-        if (params.has("query")) {
-            setSearch(params.get("query") as string)
-        }
-    }, [params])
-
     const color = useMemo(() => generateRandomBackground(), [])
 
     return (
         <>
             <div
-                className={`dark relative flex h-[500px] flex-col justify-end gap-5 p-10 text-white ${color}`}
+                className={`dark relative flex h-[300px] flex-col justify-end gap-5 p-10 text-white ${color}`}
             >
-                <h1 className="text-8xl font-bold drop-shadow-lg">Search</h1>
-                <div className="w-[500px]">
-                    <Input
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="rounded-full border-gray-400 bg-white px-6 py-7 text-lg text-black shadow-lg"
-                        placeholder="What do you want to sing?"
-                    />
-                </div>
+                <h1 className="text-7xl font-bold drop-shadow-lg">Search</h1>
             </div>
             <div
                 className={`pointer-events-none absolute z-0 h-[300px] w-full ${color} opacity-50`}

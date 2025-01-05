@@ -8,6 +8,7 @@ import {
 import { formatNumber } from "@/lib/utils"
 import { Playlist } from "@spotify/web-api-ts-sdk"
 import { decode } from "html-entities"
+import Link from "next/link"
 
 export default function PlaylistHero({
     playlist,
@@ -19,13 +20,13 @@ export default function PlaylistHero({
     return (
         <>
             <div
-                className="dark relative flex h-[300px] flex-col justify-end p-10 text-white"
+                className="dark relative flex min-h-[400px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${color.colorDark}, ${color.colorLight})`,
                 }}
             >
                 <div className="flex w-full items-end justify-between">
-                    <div className="flex items-end gap-10">
+                    <div className="flex flex-col gap-10 md:flex-row md:items-end">
                         <div>
                             <img
                                 alt={playlist.name}
@@ -49,10 +50,19 @@ export default function PlaylistHero({
                             />
                             <div className="flex gap-3">
                                 <div className="flex items-center gap-2">
-                                    <div className="opacity-75">
-                                        {formatNumber(playlist.tracks.total)}
-                                        {" Tracks"} &middot;{" "}
-                                        {playlist.owner.display_name}
+                                    <div>
+                                        <span className="opacity-75">
+                                            {formatNumber(
+                                                playlist.tracks.total
+                                            )}
+                                            {" Tracks"} &middot;{" "}
+                                        </span>
+                                        <Link
+                                            href={`/app/user/${playlist.owner.id}`}
+                                            className="hover:underline"
+                                        >
+                                            {playlist.owner.display_name}
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

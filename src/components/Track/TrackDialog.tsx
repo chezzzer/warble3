@@ -55,7 +55,6 @@ export default function TrackDialog({
                     }}
                 ></div>
                 <div className="relative flex flex-col gap-3">
-                    <DialogHeader>
                         <div className="flex items-center gap-8">
                             <Link href={`/app/album/${track.album.id}`}>
                                 <img
@@ -80,23 +79,8 @@ export default function TrackDialog({
                                     {track.explicit && <TrackExplicit />}{" "}
                                     <ArtistList artists={track.artists} />
                                 </div>
-                                <Dialog>
-                                    <DialogTrigger>
-                                        <div className="mt-2 flex items-center gap-2 text-gray-500 dark:text-gray-200">
-                                            <Smartphone size={20} />
-                                            Send to Phone
-                                        </div>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <img
-                                            alt={track.name}
-                                            src={`https://scannables.scdn.co/uri/plain/svg/020817/white/640/${track.uri}`}
-                                        />
-                                    </DialogContent>
-                                </Dialog>
                             </div>
                         </div>
-                    </DialogHeader>
                     <div className="my-3 dark:text-white">
                         {isFetching && (
                             <div className="flex min-h-[50px] items-center justify-center">

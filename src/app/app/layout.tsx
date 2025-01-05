@@ -9,6 +9,7 @@ import { SpotifyProvider } from "@/lib/Context/SpotifyContext"
 import Footer from "@/components/Footer/Footer"
 import { QueueProvider } from "@/lib/Context/QueueContext"
 import { Toaster } from "@/components/ui/sonner"
+import { SearchProvider } from "@/lib/Context/SearchContext"
 
 export const metadata: Metadata = {
     title: "WARBLE - Discover",
@@ -30,11 +31,13 @@ export default function RootLayout({
                     <TRPCReactProvider>
                         <SpotifyProvider>
                             <QueueProvider>
-                                <Navbar />
-                                <main className="relative pl-[80px]">
-                                    {children}
-                                    <Footer />
-                                </main>
+                                <SearchProvider>
+                                    <Navbar />
+                                    <main className="relative pl-[80px]">
+                                        {children}
+                                        <Footer />
+                                    </main>
+                                </SearchProvider>
                             </QueueProvider>
                         </SpotifyProvider>
                     </TRPCReactProvider>

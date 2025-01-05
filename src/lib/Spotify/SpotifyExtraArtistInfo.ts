@@ -1,5 +1,12 @@
-import { Image, SimplifiedAlbum } from "@spotify/web-api-ts-sdk"
+import {
+    Image,
+    SimplifiedAlbum,
+    SimplifiedArtist,
+    Track,
+} from "@spotify/web-api-ts-sdk"
 import { getAccessToken } from "./SpotifyPublicAuthentication"
+import { writeFile } from "fs/promises"
+import { extractUri } from "./SpotifyUtils"
 
 export default async function getExtraArtistInfo(
     artistId: string
@@ -39,6 +46,8 @@ export default async function getExtraArtistInfo(
             return null
         }
 
+        writeFile("./tmp.json", JSON.stringify(data, null, 4))
+
         return {
             discography: {
                 popularReleases:
@@ -63,6 +72,12 @@ export default async function getExtraArtistInfo(
                                 type: "album",
                             }) as SimplifiedAlbum
                     ),
+                topTracks: data.artistUnion.discography.topTracks.items
+                    .map((t) => t.track)
+                    .map((t) => ({
+                        id: t.id,
+                        playcount: t.playcount,
+                    })),
             },
             profile: {
                 biography: data.artistUnion.profile.biography.text,
@@ -121,6 +136,7 @@ export default async function getExtraArtistInfo(
 export type ArtistInfo = {
     discography: {
         popularReleases: SimplifiedAlbum[]
+        topTracks: ArtistTopTrack[]
     }
     profile: {
         biography: string
@@ -139,6 +155,11 @@ export type ArtistInfo = {
             color: string
         }
     }
+}
+
+export type ArtistTopTrack = {
+    id: string
+    playcount: number
 }
 
 export type ArtistInfoStats = {

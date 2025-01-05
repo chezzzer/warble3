@@ -15,7 +15,11 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`scrollbar-hide`} suppressHydrationWarning>
+        <html
+            lang="en"
+            className={`cursor-none scrollbar-hide`}
+            suppressHydrationWarning
+        >
             <body className="overflow-x-hidden bg-slate-900">
                 <TRPCReactProvider>
                     <LyricsProvider>{children}</LyricsProvider>

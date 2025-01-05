@@ -18,13 +18,13 @@ export default function AlbumHero({
     return (
         <>
             <div
-                className="dark relative flex h-[500px] flex-col justify-end p-10 text-white"
+                className="dark relative flex min-h-[500px] flex-col justify-end p-10 text-white"
                 style={{
                     backgroundImage: `linear-gradient(45deg, ${color.colorDark}, ${color.colorLight})`,
                 }}
             >
                 <div className="flex w-full items-end justify-between">
-                    <div className="flex items-end gap-10">
+                    <div className="flex flex-col gap-10 md:flex-row md:items-end">
                         <div>
                             <img
                                 alt={album.name}
@@ -39,11 +39,15 @@ export default function AlbumHero({
                                 {album.name}
                             </h1>
                             <div className="flex gap-3">
-                                <div className="flex items-center gap-2">
-                                    <Badge className="capitalize">
+                                <div className="flex flex-col gap-2 md:flex-row md:items-center">
+                                    <Badge className="w-fit capitalize">
                                         {album.album_type}
                                     </Badge>
-                                    <Circle size={6} weight="fill" />
+                                    <Circle
+                                        size={6}
+                                        weight="fill"
+                                        className="hidden md:block"
+                                    />
                                     {album.artists.map((a, i) => (
                                         <Link
                                             key={a.id}
@@ -56,7 +60,7 @@ export default function AlbumHero({
                                         </Link>
                                     ))}
                                     <Circle
-                                        className="opacity-75"
+                                        className="hidden opacity-75 md:block"
                                         size={6}
                                         weight="fill"
                                     />
@@ -66,7 +70,7 @@ export default function AlbumHero({
                                         ).getFullYear()}
                                     </div>
                                     <Circle
-                                        className="opacity-75"
+                                        className="hidden opacity-75 md:block"
                                         size={6}
                                         weight="fill"
                                     />

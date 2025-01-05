@@ -1,6 +1,7 @@
 "use client"
 
 import QueueItem from "@/components/Queue/QueueItem"
+import useKeepAwake from "@/hooks/useKeepWake"
 import { useQueue } from "@/lib/Context/QueueContext"
 import { useSpotify } from "@/lib/Context/SpotifyContext"
 import { MaskSad } from "@phosphor-icons/react"
@@ -12,6 +13,7 @@ export default function QueueList({
     display?: boolean
     adminControls?: boolean
 }) {
+    useKeepAwake()
     const { queue } = useQueue()
     const { progress, track } = useSpotify()
     return (

@@ -52,7 +52,7 @@ export default function AddRow() {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => addRow("random-artist")}>
                         <Plus size={19} />
-                        Random Artist
+                        Random Artist Hero
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

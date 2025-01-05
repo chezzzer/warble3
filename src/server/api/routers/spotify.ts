@@ -7,6 +7,7 @@ import getExtraArtistInfo, {
     ArtistInfo,
 } from "@/lib/Spotify/SpotifyExtraArtistInfo"
 import { getPreviewUrl } from "@/lib/Spotify/SpotifyPreviewUrl"
+import { search } from "@/lib/Spotify/SpotifySearch"
 
 export const spotifyRouter = createTRPCRouter({
     getHistory: publicProcedure
@@ -30,21 +31,25 @@ export const spotifyRouter = createTRPCRouter({
     search: publicProcedure
         .input(z.object({ query: z.string() }))
         .query(async ({ input }) => {
-            const spotify = await SpotifyProvider.makeFromDatabaseCache()
+            // const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-            const search = await spotify.search(input.query, [
-                "album",
-                "artist",
-                "track",
-                "playlist",
-            ])
+            // const search = await spotify.search(input.query, [
+            //     "album",
+            //     "artist",
+            //     "track",
+            //     "playlist",
+            // ])
 
-            return {
-                albums: search.albums.items,
-                artists: search.artists.items,
-                tracks: search.tracks.items,
-                playlists: search.playlists.items,
-            }
+            // return {
+            //     albums: search.albums.items,
+            //     artists: search.artists.items,
+            //     tracks: search.tracks.items,
+            //     playlists: search.playlists.items,
+            // }
+
+            const results = await search(input.query, 30)
+
+            return results
         }),
 
     getPreviewUrl: publicProcedure

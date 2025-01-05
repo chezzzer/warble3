@@ -1,11 +1,20 @@
 import { Track } from "@spotify/web-api-ts-sdk"
 import TrackTable from "../Track/TrackTable"
+import { ArtistTopTrack } from "@/lib/Spotify/SpotifyExtraArtistInfo"
+import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 
-export default function ArtistTopTracks({ tracks }: { tracks: Track[] }) {
+export default async function ArtistTopTracks({
+    topTracks,
+}: {
+    topTracks: ArtistTopTrack[]
+}) {
+    const spotify = await SpotifyProvider.makeFromDatabaseCache()
+    const tracks = await spotify.tracks.get(topTracks.map((t) => t.id))
+    const playcounts = topTracks.map((t) => t.playcount)
+
     return (
         <>
-            <h1 className="mb-3 text-2xl opacity-75">Top Tracks</h1>
-            <TrackTable tracks={tracks} />
+            <TrackTable tracks={tracks} playcounts={playcounts} />
         </>
     )
 }

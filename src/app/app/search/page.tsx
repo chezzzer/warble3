@@ -8,9 +8,7 @@ import { Suspense } from "react"
 export default function Search() {
     return (
         <>
-            <Suspense fallback={<HomeHeroLoader />}>
-                <SearchHero />
-            </Suspense>
+            <SearchHero />
             <SearchResults />
         </>
     )

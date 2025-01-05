@@ -20,7 +20,8 @@ export default function Time() {
 
     return (
         <div className="flex items-center gap-2 rounded-full bg-white p-2 px-4 text-black shadow-lg transition-colors dark:bg-slate-900 dark:text-white">
-            <Clock size={25} /> {time}
+            <Clock size={25} />{" "}
+            <span className="relative -bottom-[1px]">{time}</span>
         </div>
     )
 }

@@ -8,11 +8,14 @@ import { createContext, useContext, useEffect, useState } from "react"
 import type { PropsWithChildren } from "react"
 import { useSpotify } from "./SpotifyContext"
 import { useDebounce } from "@uidotdev/usehooks"
+import { useRouter } from "next/navigation"
 
 function useProviderValue() {
     const [search, setSearch] = useState<string>("")
 
     const debouncedSearch = useDebounce(search, 1000)
+
+    const router = useRouter()
 
     const { refetch, data, isError, isLoading } = api.spotify.search.useQuery(
         {
@@ -24,13 +27,32 @@ function useProviderValue() {
     )
 
     useEffect(() => {
+        if (search) {
+            router.push(`/app/search?query=${search}`)
+        }
+    }, [search])
+
+    useEffect(() => {
         if (!debouncedSearch) return
         refetch()
     }, [debouncedSearch])
 
+    useEffect(() => {
+        const search = new URLSearchParams(location.search).get("query")
+
+        if (search) {
+            setSearch(search)
+        }
+    }, [])
+
+    const clear = () => {
+        setSearch("")
+    }
+
     return {
         search,
         setSearch,
+        clear,
         items: data,
         isLoading,
         isError,

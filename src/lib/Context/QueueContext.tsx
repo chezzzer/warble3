@@ -11,18 +11,22 @@ import { useSpotify } from "./SpotifyContext"
 function useProviderValue() {
     const mutation = api.request.create.useMutation()
     const [queue, setQueue] = useState<RequestItem[]>([])
+    const [singer, setSinger] = useState<string>(null)
 
     api.request.onChange.useSubscription(undefined, {
         onData: (requests) => {
-            console.log(requests)
             setQueue(
                 requests.filter((r) => !r.current) as unknown as RequestItem[]
             )
+
+            const currentRequest = requests.find((r) => r.current)
+            setSinger(currentRequest?.name ?? null)
         },
     })
 
     return {
         queue,
+        singer,
         mutation,
     }
 }
