@@ -36,7 +36,7 @@ export default function Navbar() {
     return (
         <>
             <div
-                className="pointer-events-none fixed left-0 top-0 z-10 h-[200px] w-full bg-[#020617d7] backdrop-blur-md"
+                className="pointer-events-none fixed left-0 top-0 z-10 h-[200px] w-full bg-[#e4e4e438] backdrop-blur-md dark:bg-[#0206178c]"
                 style={{
                     maskImage: `linear-gradient(to bottom, #000, transparent)`,
                 }}
