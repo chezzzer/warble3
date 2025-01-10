@@ -48,10 +48,10 @@ export const settingsRouter = createTRPCRouter({
             })
 
             if (!setting) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                    message: "Setting not found",
-                })
+                return {
+                    name: input.name,
+                    value: null,
+                }
             }
 
             return {

@@ -30,6 +30,7 @@ export default async function KaraokePage() {
                             }
                             min={0}
                             max={100}
+                            unit="%"
                         />
                     </div>
                     <div>
@@ -49,6 +50,32 @@ export default async function KaraokePage() {
                             }
                             min={0}
                             max={100}
+                            unit="%"
+                        />
+                    </div>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>App Settings</CardHeader>
+                <CardContent className="flex flex-col gap-5">
+                    <div>
+                        <h4 className="font-semibold">App Timeout</h4>
+                        <p>
+                            Set the amount of time before the app redirects to
+                            the home page after no activity.
+                        </p>
+                        <RangeSetting
+                            name="app.timeout"
+                            initialValue={
+                                findSetting("app.timeout")
+                                    ? Number.parseInt(
+                                          findSetting("app.timeout")?.value
+                                      )
+                                    : 50
+                            }
+                            min={0}
+                            max={60}
+                            unit="s"
                         />
                     </div>
                 </CardContent>

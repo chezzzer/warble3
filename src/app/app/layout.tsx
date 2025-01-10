@@ -10,6 +10,8 @@ import Footer from "@/components/Footer/Footer"
 import { QueueProvider } from "@/lib/Context/QueueContext"
 import { Toaster } from "@/components/ui/sonner"
 import { SearchProvider } from "@/lib/Context/SearchContext"
+import { AppProvider } from "@/lib/Context/AppContext"
+import { db } from "@/server/db"
 
 export const metadata: Metadata = {
     title: "WARBLE - Discover",
@@ -17,9 +19,15 @@ export const metadata: Metadata = {
     icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
+    const timeout = await db.settings.findFirst({
+        where: {
+            name: "app.timeout",
+        },
+    })
+
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="overflow-x-hidden bg-slate-200 antialiased transition-colors duration-300 dark:bg-slate-950">
@@ -29,17 +37,23 @@ export default function RootLayout({
                     storageKey="theme"
                 >
                     <TRPCReactProvider>
-                        <SpotifyProvider>
-                            <QueueProvider>
-                                <SearchProvider>
-                                    <Navbar />
-                                    <main className="relative pl-[80px]">
-                                        {children}
-                                        <Footer />
-                                    </main>
-                                </SearchProvider>
-                            </QueueProvider>
-                        </SpotifyProvider>
+                        <AppProvider
+                            timeout={
+                                timeout ? Number(timeout.value) : undefined
+                            }
+                        >
+                            <SpotifyProvider>
+                                <QueueProvider>
+                                    <SearchProvider>
+                                        <Navbar />
+                                        <main className="relative pl-[80px]">
+                                            {children}
+                                            <Footer />
+                                        </main>
+                                    </SearchProvider>
+                                </QueueProvider>
+                            </SpotifyProvider>
+                        </AppProvider>
                     </TRPCReactProvider>
                     <Toaster />
                 </ThemeProvider>

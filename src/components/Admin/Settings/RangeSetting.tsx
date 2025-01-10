@@ -14,11 +14,13 @@ export default function RangeSetting({
     initialValue,
     min,
     max,
+    unit,
 }: {
     name: string
     initialValue: number
     min: number
     max: number
+    unit?: string
 }) {
     const [value, setValue] = useState<number>(initialValue)
 
@@ -30,8 +32,9 @@ export default function RangeSetting({
 
     return (
         <div className="flex items-center gap-3">
-            <div className="flex min-h-[30px] min-w-[30px] items-center">
+            <div className="flex min-h-[30px] min-w-[35px] items-center">
                 {isPending ? <Spinner size={20} /> : value}
+                {unit}
             </div>
             <div className="flex-1">
                 <Slider

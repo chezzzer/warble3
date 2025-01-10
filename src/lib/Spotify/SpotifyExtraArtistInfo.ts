@@ -46,8 +46,6 @@ export default async function getExtraArtistInfo(
             return null
         }
 
-        writeFile("./tmp.json", JSON.stringify(data, null, 4))
-
         return {
             discography: {
                 popularReleases:
