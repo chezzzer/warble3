@@ -8,11 +8,12 @@ import UserProfile from "@/components/User/UserProfile"
 import PlaylistLoader from "@/components/Playlist/PlaylistLoader"
 import UserLoader from "@/components/User/UserLoader"
 
-export default async function ArtistPage({
-    params,
-}: {
-    params: { userId: string }
-}) {
+export default async function ArtistPage(
+    props: {
+        params: Promise<{ userId: string }>
+    }
+) {
+    const params = await props.params;
     return (
         <>
             <Suspense fallback={<UserLoader />}>

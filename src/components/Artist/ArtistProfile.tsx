@@ -97,7 +97,6 @@ export default async function ArtistProfile({
             </div>
         )
     } catch (e) {
-        console.error(e)
         return <InLineError error={<>Unable to load artist</>} />
     }
 }

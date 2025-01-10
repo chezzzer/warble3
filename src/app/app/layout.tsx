@@ -31,12 +31,12 @@ export default async function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className="overflow-x-hidden bg-slate-200 antialiased transition-colors duration-300 dark:bg-slate-950">
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    storageKey="theme"
-                >
-                    <TRPCReactProvider>
+                <TRPCReactProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        storageKey="theme"
+                    >
                         <AppProvider
                             timeout={
                                 timeout ? Number(timeout.value) : undefined
@@ -54,9 +54,9 @@ export default async function RootLayout({
                                 </QueueProvider>
                             </SpotifyProvider>
                         </AppProvider>
-                    </TRPCReactProvider>
-                    <Toaster />
-                </ThemeProvider>
+                    </ThemeProvider>
+                </TRPCReactProvider>
+                <Toaster />
             </body>
         </html>
     )

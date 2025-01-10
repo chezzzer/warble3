@@ -5,11 +5,12 @@ import getExtraArtistInfo from "@/lib/Spotify/SpotifyExtraArtistInfo"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { Suspense } from "react"
 
-export default async function ArtistPage({
-    params,
-}: {
-    params: { artistId: string }
-}) {
+export default async function ArtistPage(
+    props: {
+        params: Promise<{ artistId: string }>
+    }
+) {
+    const params = await props.params;
     return (
         <>
             <Suspense fallback={<ArtistLoader />}>
