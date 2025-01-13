@@ -60,9 +60,9 @@ export default function QueueItem({
                 >
                     {request.track.name}
                 </p>
-                <p className={cn(display && "text-2xl", "opacity-75")}>
+                <div className={cn(display && "text-2xl", "opacity-75")}>
                     <ArtistList artists={request.track.artists} />
-                </p>
+                </div>
             </div>
             <div className="ms-auto flex flex-col items-end gap-2">
                 {playingIn && (

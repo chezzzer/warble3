@@ -17,9 +17,8 @@ import ArtistList from "../Artist/ArtistList"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 import TrackExplicit from "./TrackExplicit"
 import useImageColor from "@/hooks/useImageColor"
-import { api } from "@/trpc/react"
-import { useEffect } from "react"
-import Spinner from "../Misc/Spinner"
+import { cn } from "@/lib/utils"
+import TrackLyricSample from "./TrackLyricSample"
 
 export default function TrackDialog({
     track,
@@ -32,29 +31,19 @@ export default function TrackDialog({
 }) {
     const { color, onLoad, luminance } = useImageColor()
 
-    const { refetch, isFetched, data, isFetching } =
-        api.spotify.getPreviewUrl.useQuery(
-            { trackId: track.id },
-            {
-                enabled: false,
-            }
-        )
-
-    useEffect(() => {
-        if (isFetched || !open) return
-        refetch()
-    }, [open])
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className={luminance > 0.5 ? "light" : "dark"}>
+            <DialogContent
+                className={cn(luminance > 0.5 ? "light" : "dark", "max-w-3xl")}
+            >
                 <div
                     className="absolute left-0 top-0 z-0 h-[300px] w-full rounded-lg"
                     style={{
                         background: `linear-gradient(to bottom, ${color}, transparent)`,
                     }}
                 ></div>
-                <div className="relative flex flex-col gap-3">
+                <div className="relative flex gap-5">
+                    <div className="flex flex-[1.5] flex-col gap-3">
                         <div className="flex items-center gap-8">
                             <Link href={`/app/album/${track.album.id}`}>
                                 <img
@@ -81,19 +70,19 @@ export default function TrackDialog({
                                 </div>
                             </div>
                         </div>
-                    <div className="my-3 dark:text-white">
-                        {isFetching && (
-                            <div className="flex min-h-[50px] items-center justify-center">
-                                <Spinner size={32} />
-                            </div>
-                        )}
-                        {data && <TrackPreview color={color} url={data} />}
+                        <div className="my-3 dark:text-white">
+                            <TrackPreview color={color} id={track.id} />
+                        </div>
+                        <AddDialog
+                            track={track}
+                            onAdd={() => onOpenChange(false)}
+                        >
+                            <Button className="flex w-full items-center gap-2">
+                                <Plus size={18} /> Add to Queue
+                            </Button>
+                        </AddDialog>
                     </div>
-                    <AddDialog track={track} onAdd={() => onOpenChange(false)}>
-                        <Button className="flex w-full items-center gap-2">
-                            <Plus size={18} /> Add to Queue
-                        </Button>
-                    </AddDialog>
+                    <TrackLyricSample isrc={track.external_ids?.isrc} />
                 </div>
             </DialogContent>
         </Dialog>

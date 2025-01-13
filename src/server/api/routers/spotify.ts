@@ -2,10 +2,7 @@ import { z } from "zod"
 
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
-import { Artist, MaxInt, Track } from "@spotify/web-api-ts-sdk"
-import getExtraArtistInfo, {
-    ArtistInfo,
-} from "@/lib/Spotify/SpotifyExtraArtistInfo"
+import { MaxInt } from "@spotify/web-api-ts-sdk"
 import { getPreviewUrl } from "@/lib/Spotify/SpotifyPreviewUrl"
 import { search } from "@/lib/Spotify/SpotifySearch"
 
@@ -31,22 +28,6 @@ export const spotifyRouter = createTRPCRouter({
     search: publicProcedure
         .input(z.object({ query: z.string() }))
         .query(async ({ input }) => {
-            // const spotify = await SpotifyProvider.makeFromDatabaseCache()
-
-            // const search = await spotify.search(input.query, [
-            //     "album",
-            //     "artist",
-            //     "track",
-            //     "playlist",
-            // ])
-
-            // return {
-            //     albums: search.albums.items,
-            //     artists: search.artists.items,
-            //     tracks: search.tracks.items,
-            //     playlists: search.playlists.items,
-            // }
-
             const results = await search(input.query, 30)
 
             return results

@@ -30,12 +30,12 @@ export default function Playlist({
                         <p className="text-md overflow-hidden whitespace-nowrap font-semibold">
                             {playlist.name}
                         </p>
-                        <p className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-400">
+                        <div className="overflow-hidden whitespace-nowrap text-sm capitalize text-gray-400">
                             Playlist{" "}
                             {playlist.tracks && (
                                 <>&middot; {playlist.tracks.total} Tracks</>
                             )}
-                        </p>
+                        </div>
                     </CardContent>
                 </Card>
             </Link>

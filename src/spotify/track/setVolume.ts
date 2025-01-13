@@ -1,3 +1,4 @@
+import { createRedisClient } from "@/lib/Redis/RedisClient"
 import { SpotifyPlaybackState } from "@/lib/Spotify/SpotifyPlaybackState"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
 import { warbleLog } from "@/lib/Warble"
@@ -7,6 +8,48 @@ import { PlaybackState, Track } from "@spotify/web-api-ts-sdk"
 const spotifyPlaybackState = new SpotifyPlaybackState()
 
 let currentlyPlayingId: string | null = null
+
+const subscriber = createRedisClient()
+
+await subscriber.connect()
+
+let volume_cache: number | null = await getNormalVolume()
+let karaoke_volume_cache: number | null = await getKaraokeVolume()
+
+await subscriber.subscribe(
+    "setting.update.lyrics.karaoke_volume",
+    async (message) => {
+        karaoke_volume_cache = Number(message)
+
+        const firstInQueue = await db.request.findFirst({
+            where: {
+                current: true,
+            },
+        })
+
+        if (!firstInQueue) return
+
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+        await spotify.player.setPlaybackVolume(Number(message))
+    }
+)
+
+await subscriber.subscribe("setting.update.lyrics.volume", async (message) => {
+    volume_cache = Number(message)
+
+    const firstInQueue = await db.request.findFirst({
+        where: {
+            current: true,
+        },
+    })
+
+    if (firstInQueue) return
+
+    const spotify = await SpotifyProvider.makeFromDatabaseCache()
+
+    await spotify.player.setPlaybackVolume(Number(message))
+})
 
 export default async function setVolume() {
     const context = await spotifyPlaybackState.get()
@@ -33,42 +76,42 @@ export default async function setVolume() {
 
         if (firstInQueue?.spotifyId === context.item.id) {
             warbleLog("Setting volume to karaoke")
-            const volume = await db.settings.findFirst({
-                where: {
-                    name: "lyrics.karaoke_volume",
-                },
-            })
-            if (volume) {
-                await spotify.player.setPlaybackVolume(
-                    Number.parseInt(volume.value)
-                )
+            if (karaoke_volume_cache) {
+                await spotify.player.setPlaybackVolume(karaoke_volume_cache)
             }
         } else {
             warbleLog("Setting volume to normal")
-            const volume = await db.settings.findFirst({
-                where: {
-                    name: "lyrics.volume",
-                },
-            })
-            if (volume) {
-                await spotify.player.setPlaybackVolume(
-                    Number.parseInt(volume.value)
-                )
+            if (volume_cache) {
+                await spotify.player.setPlaybackVolume(volume_cache)
             }
         }
-
-        // Reset sync
-        await db.settings.upsert({
-            where: {
-                name: "lyrics.karaoke_sync",
-            },
-            update: {
-                value: "0",
-            },
-            create: {
-                name: "lyrics.karaoke_sync",
-                value: "0",
-            },
-        })
     }
+}
+
+async function getKaraokeVolume(): Promise<number | null> {
+    const volume = await db.settings.findFirst({
+        where: {
+            name: "lyrics.karaoke_volume",
+        },
+    })
+
+    if (!volume) {
+        return null
+    }
+
+    return Number.parseInt(volume.value)
+}
+
+async function getNormalVolume(): Promise<number | null> {
+    const volume = await db.settings.findFirst({
+        where: {
+            name: "lyrics.volume",
+        },
+    })
+
+    if (!volume) {
+        return null
+    }
+
+    return Number.parseInt(volume.value)
 }

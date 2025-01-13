@@ -16,6 +16,9 @@ import { z } from "zod"
 import getLyricsInfo from "@/lib/Lyrics/LyricsInfo"
 import { db } from "@/server/db"
 import { SpotifyProvider } from "@/lib/Spotify/SpotifyProvider"
+import { createRedisClient, redis } from "@/lib/Redis/RedisClient"
+import getLyricSample from "@/lib/Lyrics/LyricsSample"
+import { TRPCError } from "@trpc/server"
 
 export const lyricsRouter = createTRPCRouter({
     getLyricInfo: publicProcedure.query(async () => {
@@ -27,6 +30,19 @@ export const lyricsRouter = createTRPCRouter({
         return await getLyricsInfo(track.external_ids.isrc)
     }),
 
+    getLyricSample: publicProcedure
+        .input(z.object({ isrc: z.string() }))
+        .query(async ({ input }) => {
+            if (input.isrc === undefined) {
+                throw new TRPCError({
+                    code: "BAD_REQUEST",
+                    message: "ISRC is required",
+                })
+            }
+
+            return await getLyricSample(input.isrc)
+        }),
+
     subscribe: publicProcedure.subscription(async () => {
         return observable<
             | LyricEvent<PlaybackState | null>
@@ -36,6 +52,30 @@ export const lyricsRouter = createTRPCRouter({
             let progress_cache = 0
             let sync_cache = 0
             let richsync_enabled_cache = true
+
+            const setSync = (value: string) => {
+                sync_cache = Number(value)
+            }
+
+            const setRichsync = (value: string) => {
+                richsync_enabled_cache = Boolean(value)
+                sendLyrics(context.getContext())
+            }
+
+            const subscriber = createRedisClient()
+
+            ;(async () => {
+                await subscriber.connect()
+
+                await subscriber.subscribe(
+                    "setting.update.lyrics.karaoke_sync",
+                    setSync
+                )
+                await subscriber.subscribe(
+                    "setting.update.lyrics.richsync_enabled",
+                    setRichsync
+                )
+            })()
 
             const context = SpotifyContext.make()
 
@@ -108,13 +148,7 @@ export const lyricsRouter = createTRPCRouter({
                     })
                     .then(async (setting) => {
                         if (!setting) return
-                        if (
-                            richsync_enabled_cache !==
-                            (setting.value === "true")
-                        ) {
-                            richsync_enabled_cache = setting.value === "true"
-                            sendLyrics(context.getContext())
-                        }
+                        richsync_enabled_cache = setting.value === "true"
                     })
             }
 
@@ -122,15 +156,22 @@ export const lyricsRouter = createTRPCRouter({
             context.events.on("progress", sendProgress)
             context.events.on("change", sendContext)
 
-            const interval = context.startTracking(100)
-            const settingsInterval = setInterval(updateSettings, 1000)
             updateSettings()
+
+            const interval = context.startTracking(100)
             return () => {
                 clearInterval(interval)
-                clearInterval(settingsInterval)
                 context.events.off("track", sendLyrics)
                 context.events.off("change", sendContext)
                 context.events.off("progress", sendProgress)
+                subscriber.unsubscribe(
+                    "setting.update.lyrics.karaoke_sync",
+                    setSync
+                )
+                subscriber.unsubscribe(
+                    "setting.update.lyrics.richsync_enabled",
+                    setRichsync
+                )
             }
         })
     }),

@@ -6,6 +6,8 @@ import { TRPCReactProvider } from "@/trpc/react"
 import { QueueProvider } from "@/lib/Context/QueueContext"
 import { ThemeProvider } from "@/components/ThemeProvider"
 import { SpotifyProvider } from "@/lib/Context/SpotifyContext"
+import { env } from "@/env"
+import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
     title: "WARBLE - Queue",
@@ -19,8 +21,11 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`cursor-none scrollbar-hide`}
-            suppressHydrationWarning
+            className={cn(
+                "scrollbar-hide",
+                env.NODE_ENV === "production" && "scrollbar-hide"
+            )}
+            suppressHydrationWarning={true}
         >
             <body className="overflow-x-hidden bg-slate-900">
                 <ThemeProvider

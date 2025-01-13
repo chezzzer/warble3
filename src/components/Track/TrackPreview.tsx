@@ -1,23 +1,21 @@
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "../ui/dialog"
 import WavesurferPlayer from "@wavesurfer/react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { PauseCircle, Play, PlayCircle } from "@phosphor-icons/react"
 import WaveSurfer from "wavesurfer.js"
+import { api } from "@/trpc/react"
+import Spinner from "../Misc/Spinner"
 
 export default function TrackPreview({
-    url,
+    id,
     color,
 }: {
-    url: string
+    id: string
     color?: string
 }) {
+    const { data, isFetching } = api.spotify.getPreviewUrl.useQuery({
+        trackId: id,
+    })
+
     const [wavesurfer, setWavesurfer] = useState<WaveSurfer | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -25,6 +23,16 @@ export default function TrackPreview({
         if (wavesurfer) wavesurfer.setVolume(0.5)
         setIsPlaying(false)
     }, [wavesurfer])
+
+    if (isFetching) {
+        return (
+            <div className="flex min-h-[50px] items-center justify-center">
+                <Spinner size={32} />
+            </div>
+        )
+    }
+
+    if (!data) return null
 
     return (
         <div className="relative">
@@ -55,7 +63,7 @@ export default function TrackPreview({
                     height={50}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
-                    url={url}
+                    url={data}
                 />
             </div>
         </div>

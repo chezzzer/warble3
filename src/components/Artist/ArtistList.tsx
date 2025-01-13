@@ -11,16 +11,15 @@ export default function ArtistList({
     return (
         <>
             {artists.map((artist, i) => (
-                <>
+                <span key={artist.id}>
                     <Link
-                        key={artist.id}
                         href={`/app/artist/${artist.id}`}
                         className={underline && "underline"}
                     >
                         {artist.name}
                         {i !== artists.length - 1 && ","}
                     </Link>{" "}
-                </>
+                </span>
             ))}
         </>
     )

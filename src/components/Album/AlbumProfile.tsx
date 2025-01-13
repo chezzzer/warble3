@@ -7,33 +7,38 @@ import AlbumHero from "./AlbumHero"
 import { getLargestImage } from "@/lib/Spotify/SpotifyUtils"
 
 export async function AlbumProfile({ albumId }: { albumId: string }) {
-    const spotify = await SpotifyProvider.makeFromDatabaseCache()
+    try {
+        const spotify = await SpotifyProvider.makeFromDatabaseCache()
 
-    const album = await spotify.albums.get(albumId)
-    const [color] = await getExtractedColors([
-        getLargestImage(album.images)?.url,
-    ])
+        const album = await spotify.albums.get(albumId)
+        const [color] = await getExtractedColors([
+            getLargestImage(album.images)?.url,
+        ])
 
-    const artistAlbums = await spotify.artists.albums(album.artists[0].id)
+        const artistAlbums = await spotify.artists.albums(album.artists[0].id)
 
-    const items = album.tracks.items.map((track, i) => ({
-        ...track,
-        album: album as unknown as SimplifiedAlbum,
-    }))
+        const items = album.tracks.items.map((track, i) => ({
+            ...track,
+            album: album as unknown as SimplifiedAlbum,
+        }))
 
-    return (
-        <div className="flex flex-col gap-10">
-            <div>
-                <AlbumHero album={album} color={color} />
-            </div>
-            <div className="px-5">
-                <TrackTable tracks={items as Track[]} />
-            </div>
-            {artistAlbums.total > 0 && (
+        return (
+            <div className="flex flex-col gap-10">
                 <div>
-                    <AlbumArtist albums={artistAlbums.items} />
+                    <AlbumHero album={album} color={color} />
                 </div>
-            )}
-        </div>
-    )
+                <div className="px-5">
+                    <TrackTable tracks={items as Track[]} />
+                </div>
+                {artistAlbums.total > 0 && (
+                    <div>
+                        <AlbumArtist albums={artistAlbums.items} />
+                    </div>
+                )}
+            </div>
+        )
+    } catch (e) {
+        console.error(e)
+        return <div>Error loading album</div>
+    }
 }

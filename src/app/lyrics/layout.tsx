@@ -4,6 +4,8 @@ import { type Metadata } from "next"
 
 import { TRPCReactProvider } from "@/trpc/react"
 import { LyricsProvider } from "@/lib/Context/LyricsContext"
+import { cn } from "@/lib/utils"
+import { env } from "@/env"
 
 export const metadata: Metadata = {
     title: "WARBLE - Lyrics",
@@ -17,8 +19,11 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`cursor-none scrollbar-hide`}
-            suppressHydrationWarning
+            className={cn(
+                "scrollbar-hide",
+                env.NODE_ENV === "production" && "scrollbar-hide"
+            )}
+            suppressHydrationWarning={true}
         >
             <body className="overflow-x-hidden bg-slate-900">
                 <TRPCReactProvider>

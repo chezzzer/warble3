@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server"
 import { z } from "zod"
 import { Layout } from "@prisma/client"
 import { revalidateTag } from "next/cache"
+import { redis } from "@/lib/Redis/RedisClient"
 
 export const settingsRouter = createTRPCRouter({
     set: authProcedure
@@ -27,6 +28,11 @@ export const settingsRouter = createTRPCRouter({
                     value: input.value,
                 },
             })
+
+            await redis.publish(
+                `setting.update.${input.name}`,
+                String(input.value)
+            )
 
             return {
                 name: input.name,
