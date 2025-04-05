@@ -25,10 +25,9 @@ export default function QueueList({
                 }
 
                 return (
-                    <>
+                    <div key={item.id}>
                         <QueueItem
                             request={item}
-                            key={item.id}
                             display={display}
                             adminControls={adminControls}
                             playingIn={
@@ -38,7 +37,7 @@ export default function QueueList({
                         />
 
                         <hr />
-                    </>
+                    </div>
                 )
             })}
             {queue?.length === 0 && (

@@ -50,7 +50,7 @@ export default function AddDialog({
                 setOpen(false)
                 setSuccessOpen(false)
                 onAdd()
-            }, 3000)
+            }, 5000)
         } catch {
             return
         }
@@ -74,21 +74,24 @@ export default function AddDialog({
                         <DialogTitle>Add {track.name} to the Queue</DialogTitle>
                     </DialogHeader>
 
-                    <DialogDescription>
-                        <div>
-                            Your song will be slotted in at the{" "}
-                            <span className="font-bold">
-                                {numberToOrdinal(queue.length + 1)}
-                            </span>{" "}
-                            position.
-                        </div>
-                        {queueIndex >= 0 && (
-                            <div className="my-2 flex items-center gap-2 text-yellow-500">
-                                <Warning weight="bold" /> This song is already{" "}
-                                {numberToOrdinal(queueIndex + 1)} in the queue!
+                    <div className="text-sm text-muted-foreground">
+                        <div className="space-y-2">
+                            <div>
+                                Your song will be slotted in at the{" "}
+                                <span className="font-bold">
+                                    {numberToOrdinal(queue.length + 1)}
+                                </span>{" "}
+                                position.
                             </div>
-                        )}
-                    </DialogDescription>
+                            {queueIndex >= 0 && (
+                                <div className="my-2 flex items-center gap-2 text-yellow-500">
+                                    <Warning weight="bold" /> This song is
+                                    already {numberToOrdinal(queueIndex + 1)} in
+                                    the queue!
+                                </div>
+                            )}
+                        </div>
+                    </div>
                     <form
                         className="flex flex-col gap-3"
                         onSubmit={(e) => {

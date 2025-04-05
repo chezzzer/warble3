@@ -4,6 +4,7 @@ import { PauseCircle, Play, PlayCircle } from "@phosphor-icons/react"
 import WaveSurfer from "wavesurfer.js"
 import { api } from "@/trpc/react"
 import Spinner from "../Misc/Spinner"
+import TrackPreviewSkeleton from "./Loaders/TrackPreviewSkeleton"
 
 export default function TrackPreview({
     id,
@@ -12,7 +13,7 @@ export default function TrackPreview({
     id: string
     color?: string
 }) {
-    const { data, isFetching } = api.spotify.getPreviewUrl.useQuery({
+    const { data, isPending } = api.spotify.getPreviewUrl.useQuery({
         trackId: id,
     })
 
@@ -24,15 +25,9 @@ export default function TrackPreview({
         setIsPlaying(false)
     }, [wavesurfer])
 
-    if (isFetching) {
-        return (
-            <div className="flex min-h-[50px] items-center justify-center">
-                <Spinner size={32} />
-            </div>
-        )
+    if (isPending || !data) {
+        return <TrackPreviewSkeleton />
     }
-
-    if (!data) return null
 
     return (
         <div className="relative">
@@ -41,15 +36,15 @@ export default function TrackPreview({
                 onClick={() => wavesurfer?.playPause()}
             >
                 {isPlaying ? (
-                    <PauseCircle size={30} weight="fill" />
+                    <PauseCircle size={45} weight="fill" />
                 ) : (
-                    <PlayCircle size={30} weight="fill" />
+                    <PlayCircle size={45} weight="fill" />
                 )}
             </div>
             <div
                 style={{
-                    width: "calc(100% - 40px)",
-                    marginLeft: "40px",
+                    width: "calc(100% - 60px)",
+                    marginLeft: "60px",
                 }}
             >
                 <WavesurferPlayer

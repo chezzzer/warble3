@@ -1,10 +1,11 @@
 import { api } from "@/trpc/react"
-import TrackTableSkeleton from "./TracklTableSkeleton"
+import TrackTableSkeleton from "./Loaders/TrackTableSkeleton"
 import SpinnerSkeleton from "../Misc/SpinnerSkeleton"
 import { ScrollArea } from "../ui/scroll-area"
 import { useWindowScroll } from "@uidotdev/usehooks"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Badge } from "../ui/badge"
+import TrackLyricSampleSkeleton from "./Loaders/TrackLyricSampleSkeleton"
 
 export default function TrackLyricSample({
     isrc,
@@ -25,7 +26,7 @@ export default function TrackLyricSample({
     if (isPending)
         return (
             <div className="flex-1">
-                <SpinnerSkeleton />
+                <TrackLyricSampleSkeleton />
             </div>
         )
 

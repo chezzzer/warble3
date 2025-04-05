@@ -42,7 +42,7 @@ export default function TrackDialog({
                         background: `linear-gradient(to bottom, ${color}, transparent)`,
                     }}
                 ></div>
-                <div className="relative flex gap-5">
+                <div className="relative flex items-center gap-5">
                     <div className="flex flex-[1.5] flex-col gap-3">
                         <div className="flex items-center gap-8">
                             <Link href={`/app/album/${track.album.id}`}>
@@ -73,14 +73,18 @@ export default function TrackDialog({
                         <div className="my-3 dark:text-white">
                             <TrackPreview color={color} id={track.id} />
                         </div>
-                        <AddDialog
-                            track={track}
-                            onAdd={() => onOpenChange(false)}
-                        >
-                            <Button className="flex w-full items-center gap-2">
-                                <Plus size={18} /> Add to Queue
-                            </Button>
-                        </AddDialog>
+                        <div className="flex">
+                            <AddDialog
+                                track={track}
+                                onAdd={() => onOpenChange(false)}
+                            >
+                                <div className="rounded-md bg-white p-2 px-4 text-sm font-medium text-black">
+                                    <div className="flex items-center gap-2 font-medium">
+                                        <Plus size={18} /> Add to Queue
+                                    </div>
+                                </div>
+                            </AddDialog>
+                        </div>
                     </div>
                     <TrackLyricSample isrc={track.external_ids?.isrc} />
                 </div>

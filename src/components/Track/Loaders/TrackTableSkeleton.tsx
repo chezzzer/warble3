@@ -9,9 +9,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "../ui/table"
-import TrackTableItem from "./TrackTableItem"
-import { Skeleton } from "../ui/skeleton"
+} from "../../ui/table"
+import TrackTableItem from "../TrackTableItem"
+import { Skeleton } from "../../ui/skeleton"
 
 export default function TrackTableSkeleton() {
     return (

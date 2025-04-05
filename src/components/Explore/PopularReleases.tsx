@@ -26,16 +26,23 @@ const getPopularReleasesCache = unstable_cache(
 )
 
 export default async function PopularReleases() {
-    const albums = await getPopularReleasesCache()
+    try {
+        const albums = await getPopularReleasesCache()
 
-    return (
-        <>
-            <h1 className="px-5 pb-3 pt-10 text-2xl opacity-75">
-                Popular Releases
-            </h1>
-            <AlbumCarousel
-                albums={shuffleArray(albums) as unknown as SimplifiedAlbum[]}
-            />
-        </>
-    )
+        return (
+            <>
+                <h1 className="px-5 pb-3 pt-10 text-2xl opacity-75">
+                    Popular Releases
+                </h1>
+                <AlbumCarousel
+                    albums={
+                        shuffleArray(albums) as unknown as SimplifiedAlbum[]
+                    }
+                />
+            </>
+        )
+    } catch (e) {
+        console.error(e)
+        return null
+    }
 }

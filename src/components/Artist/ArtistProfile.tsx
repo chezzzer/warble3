@@ -11,7 +11,7 @@ import ArtistPopularAlbums from "./ArtistPopularAlbums"
 import InLineError from "../Misc/InLineError"
 import { Suspense } from "react"
 import SpinnerSkeleton from "../Misc/SpinnerSkeleton"
-import TrackTableSkeleton from "../Track/TracklTableSkeleton"
+import TrackTableSkeleton from "../Track/Loaders/TrackTableSkeleton"
 
 export default async function ArtistProfile({
     artistId,

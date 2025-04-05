@@ -18,14 +18,19 @@ const getPopularArtistsCache = unstable_cache(
 )
 
 export default async function PopularArtists() {
-    const artists = await getPopularArtistsCache()
+    try {
+        const artists = await getPopularArtistsCache()
 
-    return (
-        <>
-            <h1 className="px-5 pb-3 pt-10 text-2xl opacity-75">
-                Popular Artists
-            </h1>
-            <ArtistCarousel artists={shuffleArray(artists)} />
-        </>
-    )
+        return (
+            <>
+                <h1 className="px-5 pb-3 pt-10 text-2xl opacity-75">
+                    Popular Artists
+                </h1>
+                <ArtistCarousel artists={shuffleArray(artists)} />
+            </>
+        )
+    } catch (e) {
+        console.error(e)
+        return null
+    }
 }
